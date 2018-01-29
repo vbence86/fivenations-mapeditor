@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Five Nations Map Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="HandheldFriendly" content="True">
+    <meta http-equiv="cleartype" content="on">
+    <style>
+      body {
+          margin: 0;
+          padding: 0;
+          background-color: black;
+      }
+
+      #fivenations-game {
+          margin: auto;
+      }
+
+    </style>
+  </head>
+
+  <body>
+
+    <div id="fivenations-game"></div>
+
+    <script src="lib/fivenations.0.42.0.js"></script>
+    <script src="lib/EZGUI.js"></script>
+    <script src="js/bundle.js"></script>
+    <script>
+
+      var app = new FiveNations({ canvasElmId: 'fivenations-game' });
+      var scriptBox = FiveNations.Scriptbox.getInstance();
+      scriptBox.add('default', function(game) {
+
+        window.addEntity = function(id, team, x, y) {
+          game.eventEmitter.synced.entities.add({
+            id: id || 'hurricane',
+            team: team || 1,
+            x: x || (50 + Math.random() * 700),
+            y: y || (50 + Math.random() * 700),
+          });
+        };
+
+        game.map.new({
+          width: 96,
+          height: 96,
+        });
+
+        game.eventEmitter.synced.players.add({
+          user: true,
+          team: 1,
+          authorised: true,
+        });
+
+        game.eventEmitter.synced.players.add({
+          user: false,
+          team: 2,
+          authorised: false,
+        });        
+      });
+
+      app.start();
+    </script>
+  </body>
+
+</html>
