@@ -24,10 +24,7 @@ function installFiveNations() {
         authorised: false,
       });
 
-      game.map
-        .getStarfield()
-        .getFogOfWarRenderer()
-        .hide();
+      game.map.getFogOfWarRenderer().hide();
 
       resolve(game);
     });

@@ -14,8 +14,8 @@ const guiObj = {
   draggable: true,
   padding: 4,
   position: {
-    x: 0,
-    y: 0,
+    x: 50,
+    y: 50,
   },
   width: 600,
   height: 550,
