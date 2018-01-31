@@ -1,6 +1,7 @@
 /* global window */
+import { THEME } from './helpers/consts';
 import installFiveNations from './helpers/installer';
-import mainWindow, { registerEventListeners } from './components/mainWindow';
+import MapConfigWindow from './components/MapConfigWindow';
 
 const urlPrefix = window.location;
 const EZGUIPublicUrl = 'resources/EZGUI/';
@@ -16,7 +17,6 @@ installFiveNations().then((game) => {
   // here you can pass multiple themes
   EZGUI.Theme.load([themeUrl], () => {
     // create the gui
-    EZGUI.create(mainWindow, 'kenney');
-    registerEventListeners(game, EZGUI, phaserGame);
+    MapConfigWindow.create(game, EZGUI, phaserGame);
   });
 });
