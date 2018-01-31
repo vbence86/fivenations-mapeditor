@@ -1,6 +1,6 @@
 /* global window */
 import installFiveNations from './helpers/installer';
-import guiObj from './components/main';
+import mainWindow, { registerEventListeners } from './components/mainWindow';
 
 const urlPrefix = window.location;
 const EZGUIPublicUrl = 'resources/EZGUI/';
@@ -9,15 +9,14 @@ const EZGUIPublicUrl = 'resources/EZGUI/';
 const themeUrl = `${urlPrefix}${EZGUIPublicUrl}kenney-theme/kenney-theme.json`;
 
 installFiveNations().then((game) => {
+  const phaserGame = game.game;
   // Set EZGUI renderer
-  EZGUI.renderer = game.game.renderer;
+  EZGUI.renderer = phaserGame.renderer;
 
   // here you can pass multiple themes
   EZGUI.Theme.load([themeUrl], () => {
     // create the gui
-    const guiContainer = EZGUI.create(guiObj, 'kenney');
-    EZGUI.components.btn1.on('click', (event) => {
-      console.log('clicked', event);
-    });
+    EZGUI.create(mainWindow, 'kenney');
+    registerEventListeners(game, EZGUI, phaserGame);
   });
 });
