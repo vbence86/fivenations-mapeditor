@@ -8,9 +8,34 @@ const width = 400;
 const height = gameHeight;
 const offsetExpadend = gameWidth - width;
 const offsetClosed = gameWidth;
+const hLayoutBlock = 64;
+const mapSizes = [
+  {
+    width: 64,
+    height: 64,
+  },
+  {
+    width: 96,
+    height: 96,
+  },
+  {
+    width: 128,
+    height: 128,
+  },
+  {
+    width: 196,
+    height: 196,
+  },
+  {
+    width: 256,
+    height: 256,
+  },
+];
 
 let expanded = false;
 let animating = false;
+let selectedGalaxyType;
+let selectedMapSizeType;
 
 const openMapConfigButton = {
   id: 'openMapConfigButton',
@@ -22,10 +47,10 @@ const openMapConfigButton = {
   component: 'Button',
   skin: 'bluebutton',
   position: {
-    x: -80 + gameWidth,
+    x: -120 + gameWidth,
     y: 0,
   },
-  width: 80,
+  width: 120,
   height: 40,
 };
 
@@ -50,21 +75,24 @@ const mapSizesSelector = {
   component: 'Layout',
   position: { x: 0, y: 0 },
   width: 250,
-  height: 300,
+  height: hLayoutBlock * 4,
   padding: 2,
   layout: [1, 6],
   children: [
     {
-      id: 'label1',
+      id: 'mapSizeLabel',
       text: 'Map size',
       font: {
-        size: '18px',
+        size: '20px',
         family: 'Arial',
       },
       component: 'Label',
-      position: 'top left',
+      position: {
+        x: 0,
+        y: 0,
+      },
       width,
-      height: 80,
+      height: 30,
     },
     {
       id: 'mapSizeType1',
@@ -114,6 +142,93 @@ const mapSizesSelector = {
   ],
 };
 
+const galaxyListHeader = {
+  id: 'galaxyListHeader',
+  text: 'Galaxy type',
+  font: {
+    size: '20px',
+    family: 'Arial',
+  },
+  component: 'Label',
+  position: {
+    x: 0,
+    y: 0,
+  },
+  width,
+  height: 30,
+};
+
+const galaxyList = {
+  id: 'mapGalaxyList',
+  component: 'List',
+  padding: 3,
+  position: 'center',
+  width: width - 10,
+  height: hLayoutBlock * 3,
+  layout: [4, 2],
+  children: [
+    {
+      id: 'mapGalaxyButton1',
+      component: 'Button',
+      position: 'center',
+      width: 75,
+      height: 75,
+    },
+    {
+      id: 'mapGalaxyButton2',
+      component: 'Button',
+      position: 'center',
+      width: 75,
+      height: 75,
+    },
+    {
+      id: 'mapGalaxyButton3',
+      component: 'Button',
+      position: 'center',
+      width: 75,
+      height: 75,
+    },
+    {
+      id: 'mapGalaxyButton4',
+      component: 'Button',
+      position: 'center',
+      width: 75,
+      height: 75,
+    },
+    {
+      id: 'mapGalaxyButton5',
+      component: 'Button',
+      position: 'center',
+      width: 75,
+      height: 75,
+    },
+    {
+      id: 'mapGalaxyButton6',
+      component: 'Button',
+      position: 'center',
+      width: 75,
+      height: 75,
+    },
+  ],
+};
+
+const generateMapButton = {
+  id: 'generateMapButton',
+  text: 'Generate',
+  font: {
+    size: '12px',
+    family: 'Arial',
+  },
+  component: 'Button',
+  skin: 'bluebutton',
+  position: {
+    x: width - 135,
+    y: 0,
+  },
+  width: 120,
+  height: 40,
+};
+
 const mapConfigWindow = {
   id: 'mapConfigWindow',
   component: 'Window',
@@ -135,8 +250,21 @@ const mapConfigWindow = {
   },
   width,
   height,
-  layout: [1, 2],
-  children: [closeMapConfigButton, mapSizesSelector],
+  layout: [1, 12], // one layout block is 64px
+  children: [
+    closeMapConfigButton,
+    mapSizesSelector,
+    null,
+    null,
+    null,
+    null,
+    galaxyListHeader,
+    null,
+    galaxyList,
+    null,
+    null,
+    generateMapButton,
+  ],
 };
 
 function toogleWindow(EZGUI, phaserGame) {
@@ -169,6 +297,75 @@ function create(game, EZGUI, phaserGame) {
   EZGUI.components.closeMapConfigButton.on('click', () => {
     EZGUI.components.openMapConfigButton.visible = true;
     toogleWindow(EZGUI, phaserGame);
+  });
+
+  const mapSizeButtons = [
+    EZGUI.components.mapSizeType1,
+    EZGUI.components.mapSizeType2,
+    EZGUI.components.mapSizeType3,
+    EZGUI.components.mapSizeType4,
+    EZGUI.components.mapSizeType5,
+  ];
+
+  mapSizeButtons.forEach((button, idx) => {
+    button.on('click', () => {
+      selectedMapSizeType = idx + 1;
+    });
+  });
+
+  const galaxyButtons = [
+    EZGUI.components.mapGalaxyButton1,
+    EZGUI.components.mapGalaxyButton2,
+    EZGUI.components.mapGalaxyButton3,
+    EZGUI.components.mapGalaxyButton4,
+    EZGUI.components.mapGalaxyButton5,
+    EZGUI.components.mapGalaxyButton6,
+  ];
+
+  // create a new bitmap data object
+  const bmd = game.add.bitmapData(75, 75);
+
+  // draw to the canvas context like normal
+  bmd.ctx.beginPath();
+  bmd.ctx.lineWidth = 5;
+  bmd.ctx.strokeStyle = 'red';
+  bmd.ctx.rect(0, 0, 75, 75);
+  bmd.ctx.stroke();
+
+  // use the bitmap data as the texture for the sprite
+  const selection = game.add.sprite(0, 0, bmd);
+  selection.visible = false;
+
+  galaxyButtons.forEach((button, idx) => {
+    const starfieldName = `starfield-${idx + 1}`;
+    const skin = phaserGame.make.sprite(0, 0, starfieldName);
+    const scale = button.width / 1024;
+    skin.inputEnabled = true;
+    skin.scale.setTo(scale, scale);
+    skin.alpha = 0.75;
+    button.addChild(skin);
+    button.on('click', () => {
+      selection.visible = true;
+      button.addChild(selection);
+      selectedGalaxyType = starfieldName;
+    });
+  });
+
+  EZGUI.components.generateMapButton.on('click', () => {
+    if (!selectedMapSizeType || !selectedGalaxyType) {
+      alert('Select Size and Galaxy of the map!');
+      return;
+    }
+
+    game.map.new({
+      width: mapSizes[selectedMapSizeType - 1].width,
+      height: mapSizes[selectedMapSizeType - 1].height,
+      starfield: {
+        backgroundTile: selectedGalaxyType,
+      },
+    });
+
+    game.map.getFogOfWarRenderer().hide();
   });
 }
 
