@@ -1,5 +1,7 @@
-/* global window */
+/* global window, alert */
 import { THEME } from '../helpers/consts';
+import Exporter from '../helpers/Exporter';
+import EventEmitter from '../helpers/EventEmitter';
 
 const ns = window.fivenations;
 const gameWidth = ns.window.width;
@@ -286,17 +288,27 @@ function toogleWindow(EZGUI, phaserGame) {
 }
 
 function create(game, EZGUI, phaserGame) {
+  const eventEmitter = EventEmitter.getInstance();
+
   EZGUI.create(mapConfigWindow, THEME);
   EZGUI.create(openMapConfigButton, THEME);
 
-  EZGUI.components.openMapConfigButton.on('click', () => {
+  eventEmitter.on('windowOpened', () => {
     EZGUI.components.openMapConfigButton.visible = false;
+  });
+
+  eventEmitter.on('windowClosed', () => {
+    EZGUI.components.openMapConfigButton.visible = true;
+  });
+
+  EZGUI.components.openMapConfigButton.on('click', () => {
     toogleWindow(EZGUI, phaserGame);
+    eventEmitter.emit('windowOpened');
   });
 
   EZGUI.components.closeMapConfigButton.on('click', () => {
-    EZGUI.components.openMapConfigButton.visible = true;
     toogleWindow(EZGUI, phaserGame);
+    eventEmitter.emit('windowClosed');
   });
 
   const mapSizeButtons = [
@@ -357,14 +369,17 @@ function create(game, EZGUI, phaserGame) {
       return;
     }
 
-    game.map.new({
+    const config = {
       width: mapSizes[selectedMapSizeType - 1].width,
       height: mapSizes[selectedMapSizeType - 1].height,
       starfield: {
         backgroundTile: selectedGalaxyType,
       },
-    });
+    };
 
+    Exporter.getInstance().setMap(config);
+
+    game.map.new(config);
     game.map.getFogOfWarRenderer().hide();
   });
 }
