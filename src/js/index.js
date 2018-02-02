@@ -4,6 +4,7 @@ import installFiveNations from './helpers/installer';
 import MapConfigWindow from './components/windows/MapConfigWindow';
 import StarfieldWindow from './components/windows/StarfieldWindow';
 import PlayersWindow from './components/windows/PlayersWindow';
+import EntitiesWindow from './components/windows/EntitiesWindow';
 
 const urlPrefix = window.location;
 const EZGUIPublicUrl = 'resources/EZGUI/';

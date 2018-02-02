@@ -16,10 +16,11 @@ function installFiveNations() {
       // we generate all the players beforehand, but will
       // export only the activated ones
       for (let i = 0, l = PLAYERS_COUNT; i < l; i += 1) {
+        const user = i === 0;
         game.eventEmitter.synced.players.add({
-          user: i == 0,
           team: i + 1,
-          authorised: i == 0,
+          authorised: user,
+          user,
         });
       }
 
