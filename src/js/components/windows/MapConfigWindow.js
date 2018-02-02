@@ -1,7 +1,7 @@
 /* global window, alert */
-import { THEME } from '../helpers/consts';
-import Exporter from '../helpers/Exporter';
-import EventEmitter from '../helpers/EventEmitter';
+import { THEME } from '../../helpers/consts';
+import Exporter from '../../helpers/Exporter';
+import EventEmitter from '../../helpers/EventEmitter';
 
 const ns = window.fivenations;
 const gameWidth = ns.window.width;
@@ -381,6 +381,8 @@ function create(game, EZGUI, phaserGame) {
 
     game.map.new(config);
     game.map.getFogOfWarRenderer().hide();
+
+    Selector.getInstance().reset();
   });
 }
 

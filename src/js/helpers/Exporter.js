@@ -46,6 +46,35 @@ class Exporter {
   }
 
   /**
+   * Persists the configuration details of to the given SpaceObject
+   * @param {object} config - Contains all required information about the SpaceObject
+   */
+  addSpaceObject(config) {
+    if (!this.spaceObjects) {
+      this.spaceObjects = [];
+    }
+    this.spaceObjects.push(config);
+  }
+
+  /**
+   * Creates or Overwrites the given player attributes by the idx attr
+   * @param {object} player attributes
+   */
+  setPlayer(config) {
+    const { idx } = config;
+    if (!this.players) {
+      this.players = {};
+    }
+    if (!this.players[idx]) {
+      this.players[idx] = {};
+    }
+    this.players[idx] = {
+      config,
+      ...this.players[idx],
+    };
+  }
+
+  /**
    * Converts all the passed data to JSON format
    * @return {string} JSON formatted map data
    */
@@ -61,6 +90,10 @@ class Exporter {
   }
 }
 
+/**
+ * Singleton pattern around the main class to make it useble across
+ * the whole application
+ */
 export default {
   getInstance() {
     if (!singleton) {

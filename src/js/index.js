@@ -1,8 +1,9 @@
 /* global window */
 import { THEME } from './helpers/consts';
 import installFiveNations from './helpers/installer';
-import MapConfigWindow from './components/MapConfigWindow';
-import StarfieldWindow from './components/StarfieldWindow';
+import MapConfigWindow from './components/windows/MapConfigWindow';
+import StarfieldWindow from './components/windows/StarfieldWindow';
+import PlayersWindow from './components/windows/PlayersWindow';
 
 const urlPrefix = window.location;
 const EZGUIPublicUrl = 'resources/EZGUI/';
@@ -22,7 +23,7 @@ installFiveNations().then((game) => {
   // here you can pass multiple themes
   EZGUI.Theme.load([themeUrl], () => {
     // create the gui
-    const components = [MapConfigWindow, StarfieldWindow];
+    const components = [MapConfigWindow, StarfieldWindow, PlayersWindow];
 
     components.forEach((component) => {
       component.create(game, EZGUI, phaserGame);

@@ -1,4 +1,5 @@
 /* global FiveNations */
+import { PLAYERS_COUNT } from './consts';
 
 const canvasElmId = 'fivenations-game';
 const app = new FiveNations({ canvasElmId });
@@ -12,17 +13,15 @@ function installFiveNations() {
         height: 96,
       });
 
-      game.eventEmitter.synced.players.add({
-        user: true,
-        team: 1,
-        authorised: true,
-      });
-
-      game.eventEmitter.synced.players.add({
-        user: false,
-        team: 2,
-        authorised: false,
-      });
+      // we generate all the players beforehand, but will
+      // export only the activated ones
+      for (let i = 0, l = PLAYERS_COUNT; i < l; i += 1) {
+        game.eventEmitter.synced.players.add({
+          user: i == 0,
+          team: i + 1,
+          authorised: i == 0,
+        });
+      }
 
       game.map.getFogOfWarRenderer().hide();
 
