@@ -26,7 +26,7 @@ const openEntitiesButton = {
   skin: 'bluebutton',
   position: {
     x: -120 + gameWidth,
-    y: 82,
+    y: 123,
   },
   width: 120,
   height: 40,
@@ -47,22 +47,6 @@ const closeEntitiesButton = {
   },
   width: 40,
   height: 40,
-};
-
-const entitiesListHeader = {
-  id: 'entitiesListHeader',
-  text: 'Entities list',
-  font: {
-    size: '20px',
-    family: 'Arial',
-  },
-  component: 'Label',
-  position: {
-    x: 0,
-    y: 0,
-  },
-  width,
-  height: 30,
 };
 
 const entitiesWindow = {
@@ -89,7 +73,6 @@ const entitiesWindow = {
   layout: [1, 12], // one layout block is 64px
   children: [
     closeEntitiesButton,
-    entitiesListHeader,
     null,
     null,
     null,

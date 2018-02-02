@@ -24,7 +24,12 @@ installFiveNations().then((game) => {
   // here you can pass multiple themes
   EZGUI.Theme.load([themeUrl], () => {
     // create the gui
-    const components = [MapConfigWindow, StarfieldWindow, PlayersWindow];
+    const components = [
+      MapConfigWindow,
+      StarfieldWindow,
+      PlayersWindow,
+      EntitiesWindow,
+    ];
 
     components.forEach((component) => {
       component.create(game, EZGUI, phaserGame);
