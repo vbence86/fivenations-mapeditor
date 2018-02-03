@@ -1,3 +1,6 @@
+import EventEmitter from './EventEmitter';
+import { EVENT_ON_SELECTOR_RESET } from './consts';
+
 let singleton;
 
 /**
@@ -26,6 +29,7 @@ class Selector {
    */
   reset() {
     this.id = null;
+    EventEmitter.getInstance().emit(EVENT_ON_SELECTOR_RESET);
   }
 
   /**

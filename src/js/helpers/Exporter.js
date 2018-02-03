@@ -57,6 +57,33 @@ class Exporter {
   }
 
   /**
+   * Saves the config object used to add an Entity to the world
+   * @param {object} config - Contains all required information about the SpaceObject
+   */
+  addEntity(config) {
+    if (!this.entities) {
+      this.entities = [];
+    }
+    this.entities.push(config);
+  }
+
+  /**
+   * Removes the saved configuration of an entity identified by the given GUID
+   * @param {number} guid
+   */
+  removeEntityByGUID(guid) {
+    if (!this.entities) {
+      return;
+    }
+    for (let i = 0, l = this.entities; i < l; i += 1) {
+      if (this.entities[i].getGUID() === guid) {
+        this.entities.splice(i, 1);
+        return;
+      }
+    }
+  }
+
+  /**
    * Creates or Overwrites the given player attributes by the idx attr
    * @param {object} player attributes
    */

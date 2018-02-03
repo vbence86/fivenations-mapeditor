@@ -1,7 +1,14 @@
 /* global window, alert */
-import { THEME } from '../../helpers/consts';
+import {
+  THEME,
+  CATEGORY_ENTITIES,
+  ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_MISC,
+} from '../../helpers/consts';
 import Exporter from '../../helpers/Exporter';
+import Selector from '../../helpers/Selector';
 import EventEmitter from '../../helpers/EventEmitter';
+import EntitiesTabs from '../elements/EntitiesTabs';
 
 const ns = window.fivenations;
 const gameWidth = ns.window.width;
@@ -11,9 +18,32 @@ const height = gameHeight;
 const offsetExpadend = gameWidth - width;
 const offsetClosed = gameWidth;
 const hLayoutBlock = 64;
+const placementWindow = {
+  width: gameWidth,
+  height: gameHeight,
+};
+
+const tabButtonIds = [
+  ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_MISC,
+];
+
+const defaultTabId = ENTITY_TAB_FEDERATION;
+
+const tabButtonConfig = {
+  width: 50,
+  height: 40,
+};
 
 let expanded = false;
 let animating = false;
+const activeTab = ENTITY_TAB_FEDERATION;
+// it starts from 1 to avoid having fake falshy values
+let customGUIDCounter = 1;
 
 const openEntitiesButton = {
   id: 'openEntitiesButton',
@@ -49,6 +79,52 @@ const closeEntitiesButton = {
   height: 40,
 };
 
+const resetEntitiesSelectionButton = {
+  id: 'resetEntitiesSelectionButton',
+  text: 'Reset',
+  font: {
+    size: '12px',
+    family: 'Arial',
+  },
+  component: 'Button',
+  position: {
+    x: 46,
+    y: 6,
+  },
+  width: 75,
+  height: 40,
+};
+
+function createTabButton(id) {
+  return {
+    id: `entitiesWindowTabButton${id}`,
+    text: id,
+    font: {
+      size: '14px',
+      family: 'Arial',
+    },
+    component: 'Button',
+    skin: 'bluebutton',
+    position: 'top left',
+    width: tabButtonConfig.width,
+    height: tabButtonConfig.height,
+  };
+}
+
+function createEntityTabLayout() {
+  const buttonCount = tabButtonIds.length;
+  return {
+    id: 'entitiesWindowTabLayout',
+    component: 'Layout',
+    padding: 3,
+    position: 'top left',
+    width: (tabButtonConfig.width + 6) * buttonCount,
+    height: tabButtonConfig.height + 6,
+    layout: [buttonCount, 1],
+    children: tabButtonIds.map(id => createTabButton(id)),
+  };
+}
+
 const entitiesWindow = {
   id: 'entitiesWindow',
   component: 'Window',
@@ -72,8 +148,19 @@ const entitiesWindow = {
   height,
   layout: [1, 12], // one layout block is 64px
   children: [
-    closeEntitiesButton,
-    null,
+    {
+      id: 'entitiesHeaderButtonsLayout',
+      component: 'Layout',
+      position: 'top left',
+      padding: 3,
+      width: width - 15,
+      height: 60,
+      layout: [10, 1],
+      children: [closeEntitiesButton, resetEntitiesSelectionButton],
+    },
+    createEntityTabLayout(),
+    EntitiesTabs.getGUIDefinition(ENTITY_TAB_FEDERATION),
+    EntitiesTabs.getGUIDefinition(ENTITY_TAB_MISC),
     null,
     null,
     null,
@@ -104,29 +191,118 @@ function toogleWindow(EZGUI, phaserGame) {
   animating = true;
 }
 
+function toogleTab(tab, tabs) {
+  tabs.forEach((obj) => {
+    obj.x = 3;
+    obj.y = 144;
+    obj.visible = obj === tab;
+  });
+}
+
+function addEventListenersToTabButtons(EZGUI) {
+  const tabs = tabButtonIds.map(id => EZGUI.components[`entitiesTab${id}`]);
+  const buttons = tabButtonIds.map(id => EZGUI.components[`entitiesWindowTabButton${id}`]);
+
+  const defaultTab = EZGUI.components[`entitiesTab${defaultTabId}`];
+  toogleTab(defaultTab, tabs);
+
+  buttons.forEach((button) => {
+    const id = button.text;
+    const tab = EZGUI.components[`entitiesTab${id}`];
+    button.on('click', () => {
+      toogleTab(tab, tabs);
+    });
+  });
+}
+
+function placeEntity(game, config) {
+  const extendedConfig = {
+    guid: customGUIDCounter,
+    ...config,
+  };
+
+  game.eventEmitter.synced.entities.add(extendedConfig);
+  Exporter.getInstance().addEntity(extendedConfig);
+
+  customGUIDCounter += 1;
+}
+
+function addPlacementListener(game, EZGUI, phaserGame) {
+  game.userPointer.on('leftbutton/down', (mousePointer) => {
+    const coords = mousePointer.getRealCoords();
+    const selector = Selector.getInstance();
+    const z = EZGUI.components.spaceObjectsAttributeZ.value * 0.9 + 0.1;
+    const scale = EZGUI.components.spaceObjectsAttributeScale.value + 1;
+
+    if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
+    if (!selector.isActive()) return;
+    if (selector.getCategory() !== CATEGORY_ENTITIES) return;
+    if (!selector.getSelectedPlayer()) {
+      alert('Select a Player first in the Player Window!');
+      return;
+    }
+
+    placeEntity(game, {
+      id: selector.getId(),
+      x: coords.x,
+      y: coords.y,
+      team: selector.getSelectedPlayer(),
+    });
+  });
+}
+
+function addRemoveListener(game) {
+  game.userKeyboard.on('key/delete', () => {
+    game.entityManager.entities(':selected').forEach((entity) => {
+      Exporter.getInstance().removeEntityByGUID(entity.getGUID());
+    });
+  });
+}
+
 function create(game, EZGUI, phaserGame) {
   const eventEmitter = EventEmitter.getInstance();
 
   EZGUI.create(entitiesWindow, THEME);
   EZGUI.create(openEntitiesButton, THEME);
 
+  const openButton = EZGUI.components.openEntitiesButton;
+  const closeButton = EZGUI.components.closeEntitiesButton;
+  const resetButton = EZGUI.components.resetEntitiesSelectionButton;
+
   eventEmitter.on('windowOpened', () => {
-    EZGUI.components.openEntitiesButton.visible = false;
+    openButton.visible = false;
   });
 
   eventEmitter.on('windowClosed', () => {
-    EZGUI.components.openEntitiesButton.visible = true;
+    openButton.visible = true;
   });
 
-  EZGUI.components.openEntitiesButton.on('click', () => {
+  openButton.on('click', () => {
     toogleWindow(EZGUI, phaserGame);
     eventEmitter.emit('windowOpened');
   });
 
-  EZGUI.components.closeEntitiesButton.on('click', () => {
+  closeButton.on('click', () => {
     toogleWindow(EZGUI, phaserGame);
     eventEmitter.emit('windowClosed');
   });
+
+  resetButton.on('click', () => {
+    Selector.getInstance().reset();
+  });
+
+  eventEmitter.on('windowOpened', () => {
+    placementWindow.width = gameWidth - width;
+  });
+
+  eventEmitter.on('windowClosed', () => {
+    placementWindow.width = gameWidth - openEntitiesButton.width;
+  });
+
+  EntitiesTabs.addEventListeners(game, EZGUI, phaserGame);
+  addEventListenersToTabButtons(EZGUI);
+  addPlacementListener(game, EZGUI, phaserGame);
+  addRemoveListener(game);
 }
 
 export default {

@@ -1,72 +1,74 @@
 import {
-  CATEGORY_SPACE_OBJECTS,
+  CATEGORY_ENTITIES,
+  ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_MISC,
   EVENT_ON_SELECTOR_RESET,
 } from '../../helpers/consts';
 import Selector from '../../helpers/Selector';
 import EventEmitter from '../../helpers/EventEmitter';
 
 const width = 400;
-const buttonWidth = 75;
-const buttonHeight = 75;
+const buttonWidth = 80;
+const buttonHeight = 80;
 
-const spaceObjects = [
-  'cloud1a',
-  'cloud1b',
-  'cloud1c',
-  'cloud1d',
-  'cloud2a',
-  'cloud2b',
-  'cloud2c',
-  'cloud2d',
-  'planet1',
-  'planet2',
-  'planet3',
-  'planet4',
-  'planet5',
-  'planet6',
-  'planet7',
-  'planet8',
-  'planet9',
-  'planet10',
-  'planet11',
-  'planet12',
-  'planet13',
-  'planet14',
-  'planet15',
-  'planet16',
-  'planet17',
-  'planet18',
-  'planet19',
-  'planet20',
-  'meteorites1',
-  'meteorites2',
-  'meteorites3',
-  'meteorites4',
-  'meteorites5',
-  'meteorites6',
-  'meteorites7',
-  'meteorites8',
-  'meteorites9',
-  'smallplanet1',
-  'smallplanet2',
-  'smallplanet3',
-  'smallplanet4',
-  'galaxy1',
-  'galaxy2',
-  'galaxy3',
-  'galaxy4',
-  'galaxy5',
-  'galaxy6',
-  'galaxy7',
-  'galaxy8',
-  'galaxy9',
-  'galaxy10',
-  'galaxy11',
-  'galaxy12',
-  'smallmeteorites1',
-  'smallmeteorites2',
-  'smallmeteorites3',
-];
+const entities = {
+  [ENTITY_TAB_FEDERATION]: [
+    'hurricane',
+    'orca',
+    'hailstorm',
+    'stgeorge',
+    'avenger',
+    'avenger2',
+    'icarus',
+    'engineershuttle',
+    'kutuzov',
+    'pasteur',
+    'dresda',
+    'crow',
+    'teller',
+    'commandcenter',
+    'miningstation',
+    'civilianbase',
+    'solarstation',
+    'shipfactory',
+    'dockyard',
+    'merchantport',
+    'researchcenter',
+    'astrometricstation',
+    'fleetheadquarters',
+    'defensesatellite',
+    'defenseplatform',
+    'fusionreactor',
+  ],
+  [ENTITY_TAB_MISC]: [
+    'asteroid1',
+    'asteroid2',
+    'asteroid3',
+    'asteroid4',
+    'asteroidbig1',
+    'asteroidbig2',
+    'asteroidsmall1',
+    'asteroidsmall2',
+    'asteroidsmall3',
+    'asteroidsmall4',
+    'asteroidice1',
+    'asteroidice2',
+    'asteroidicesmall1',
+    'asteroidicesmall2',
+    'asteroidsilicon1',
+    'asteroidsilicon2',
+    'asteroidsiliconsmall1',
+    'asteroidsiliconsmall2',
+    'asteroidtitanium1',
+    'asteroidtitanium2',
+    'asteroidtitaniumsmall1',
+    'asteroidtitaniumsmall2',
+    'asteroiduranium1',
+    'asteroiduranium2',
+    'asteroiduraniumsmall1',
+    'asteroiduraniumsmall2',
+  ],
+};
 
 function createButton(id) {
   return {
@@ -86,7 +88,7 @@ function createButtonLayout(objects) {
     padding: 3,
     draggable: true,
     dragX: false,
-    position: 'center',
+    position: 'top left',
     width: (buttonWidth + 12) * columnPerRow,
     height: (buttonHeight + 12) * rows,
     layout: [4, rows],
@@ -94,16 +96,19 @@ function createButtonLayout(objects) {
   };
 }
 
-function getGUIDefinition() {
+function getGUIDefinition(category) {
   return {
-    id: 'spaceObjectsList',
+    id: `entitiesTab${category}`,
     component: 'List',
     padding: 3,
-    position: 'top left',
+    position: {
+      x: 0,
+      y: 0,
+    },
     width: width - 15,
-    height: 600,
+    height: 520,
     layout: [1, 1],
-    children: [createButtonLayout(spaceObjects)],
+    children: [createButtonLayout(entities[category])],
   };
 }
 
@@ -126,16 +131,14 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     selection.visible = false;
   });
 
-  spaceObjects.forEach((id) => {
+  mergeAllEntities().forEach((id) => {
     const button = EZGUI.components[id];
+    if (!button) return;
 
-    const dataObject = game.cache.getJSON(id);
-    const { sprite, customFrame } = dataObject;
+    const spriteObj = phaserGame.make.sprite(0, 0, id);
+    spriteObj.frame = 1;
 
-    const spriteObj = phaserGame.make.sprite(0, 0, sprite);
-    spriteObj.frame = customFrame || 0;
     const clone = phaserGame.make.sprite(0, 0, spriteObj.generateTexture());
-
     const scale = button.width / clone.width;
 
     clone.scale.setTo(scale, scale);
@@ -148,11 +151,17 @@ function addButtonListeners(game, EZGUI, phaserGame) {
       button.addChild(selection);
       // updates the current selection
       Selector.getInstance().select({
-        category: CATEGORY_SPACE_OBJECTS,
+        category: CATEGORY_ENTITIES,
         id,
       });
     });
   });
+}
+
+function mergeAllEntities() {
+  return Object.keys(entities)
+    .map(key => entities[key])
+    .reduce((accumulator, list) => accumulator.concat(list), []);
 }
 
 function addEventListeners(game, EZGUI, phaserGame) {

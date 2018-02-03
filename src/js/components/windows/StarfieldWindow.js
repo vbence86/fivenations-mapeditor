@@ -54,6 +54,22 @@ const closeStarfieldButton = {
   height: 40,
 };
 
+const resetStarfieldSelectionButton = {
+  id: 'resetStarfieldSelectionButton',
+  text: 'Reset',
+  font: {
+    size: '12px',
+    family: 'Arial',
+  },
+  component: 'Button',
+  position: {
+    x: 46,
+    y: 6,
+  },
+  width: 75,
+  height: 40,
+};
+
 const spaceObjectsAttributesHeader = {
   id: 'spaceObjectsAttriutesHeader',
   text: 'Placement attributes',
@@ -162,7 +178,16 @@ const StarfieldWindow = {
   height,
   layout: [1, 12], // one layout block is 64px
   children: [
-    closeStarfieldButton,
+    {
+      id: 'entitiesHeaderButtonsLayout',
+      component: 'Layout',
+      position: 'top left',
+      padding: 3,
+      width: width - 15,
+      height: 60,
+      layout: [10, 1],
+      children: [closeStarfieldButton, resetStarfieldSelectionButton],
+    },
     spaceObjectsAttributesHeader,
     spaceObjectsAttributes,
     null,
@@ -238,22 +263,30 @@ function create(game, EZGUI, phaserGame) {
   EZGUI.create(StarfieldWindow, THEME);
   EZGUI.create(openStarfieldButton, THEME);
 
+  const openButton = EZGUI.components.openStarfieldButton;
+  const closeButton = EZGUI.components.closeStarfieldButton;
+  const resetButton = EZGUI.components.resetStarfieldSelectionButton;
+
   eventEmitter.on('windowOpened', () => {
-    EZGUI.components.openStarfieldButton.visible = false;
+    openButton.visible = false;
   });
 
   eventEmitter.on('windowClosed', () => {
-    EZGUI.components.openStarfieldButton.visible = true;
+    openButton.visible = true;
   });
 
-  EZGUI.components.openStarfieldButton.on('click', () => {
+  openButton.on('click', () => {
     toogleWindow(EZGUI, phaserGame);
     eventEmitter.emit('windowOpened');
   });
 
-  EZGUI.components.closeStarfieldButton.on('click', () => {
+  closeButton.on('click', () => {
     toogleWindow(EZGUI, phaserGame);
     eventEmitter.emit('windowClosed');
+  });
+
+  resetButton.on('click', () => {
+    Selector.getInstance().reset();
   });
 
   eventEmitter.on('windowOpened', () => {
