@@ -1,5 +1,10 @@
 /* global window */
-import { THEME, CATEGORY_SPACE_OBJECTS } from '../../helpers/consts';
+import {
+  THEME,
+  CATEGORY_SPACE_OBJECTS,
+  EVENT_SPACE_OBJECT_SELECTED,
+  EVENT_SPACE_OBJECT_SELECTION_CANCELED,
+} from '../../helpers/consts';
 import EventEmitter from '../../helpers/EventEmitter';
 import Selector from '../../helpers/Selector';
 import SpaceObjectsList from '../elements/SpaceObjectsList';
@@ -19,6 +24,8 @@ const placementWindow = {
 
 let expanded = false;
 let animating = false;
+let selectionSprite;
+let selectedSpaceObject;
 
 const openStarfieldButton = {
   id: 'openStarfieldButton',
@@ -238,7 +245,7 @@ function placeSpaceObject(game, config) {
 
 function addPlacementListener(game, EZGUI, phaserGame) {
   game.userPointer.on('leftbutton/down', (mousePointer) => {
-    const coords = mousePointer.getRealCoords();
+    const coords = mousePointer.getScreenCoords();
     const selector = Selector.getInstance();
     const z = EZGUI.components.spaceObjectsAttributeZ.value * 0.9 + 0.1;
     const scale = EZGUI.components.spaceObjectsAttributeScale.value + 1;
@@ -249,20 +256,117 @@ function addPlacementListener(game, EZGUI, phaserGame) {
 
     placeSpaceObject(game, {
       id: selector.getId(),
-      x: coords.x * z,
-      y: coords.y * z,
+      x: coords.x + phaserGame.camera.x * z,
+      y: coords.y + phaserGame.camera.y * z,
       z,
       scale,
     });
   });
 }
 
-function create(game, EZGUI, phaserGame) {
+function isMouseOverSpaceObject(pointer, spaceObject, phaserGame) {
+  const x = spaceObject.x - phaserGame.camera.x * spaceObject.z;
+  const y = spaceObject.y - phaserGame.camera.y * spaceObject.z;
+  const width = spaceObject.sprite.width;
+  const height = spaceObject.sprite.height;
+  return (
+    pointer.x >= x &&
+    pointer.x <= x + width &&
+    pointer.y >= y &&
+    pointer.y <= y + height
+  );
+}
+
+function addSelectSpaceObjectListener(game, phaserGame) {
+  game.userPointer.on('leftbutton/down', (mousePointer) => {
+    const selector = Selector.getInstance();
+    if (selector.isActive()) return;
+
+    const pointer = mousePointer.getRealCoords();
+    const starfield = game.map.getStarfield();
+    const deepSpaceLayer = starfield.getDeepSpaceLayer();
+    const spaceObjects = deepSpaceLayer.spaceObjects;
+
+    pointer.x -= phaserGame.camera.x;
+    pointer.y -= phaserGame.camera.y;
+
+    for (let i = spaceObjects.length - 1; i >= 0; i -= 1) {
+      if (isMouseOverSpaceObject(pointer, spaceObjects[i], phaserGame)) {
+        EventEmitter.getInstance().emit(
+          EVENT_SPACE_OBJECT_SELECTED,
+          spaceObjects[i],
+        );
+        return;
+      }
+    }
+
+    EventEmitter.getInstance().emit(EVENT_SPACE_OBJECT_SELECTION_CANCELED);
+  });
+}
+
+function createSelectionSprite(game) {
+  const width = 100;
+  const height = 100;
+  // create a new bitmap data object
+  const bmd = game.add.bitmapData(width, height);
+
+  // draw to the canvas context like normal
+  bmd.ctx.beginPath();
+  bmd.ctx.lineWidth = 5;
+  bmd.ctx.strokeStyle = 'blue';
+  bmd.ctx.rect(0, 0, width, height);
+  bmd.ctx.stroke();
+
+  // use the bitmap data as the texture for the sprite
+  selectionSprite = game.add.sprite(0, 0, bmd);
+  selectionSprite.visible = false;
+}
+
+function addSelectionListeners(game) {
   const eventEmitter = EventEmitter.getInstance();
+  eventEmitter.on(EVENT_SPACE_OBJECT_SELECTED, (spaceObject) => {
+    const sprite = spaceObject.sprite;
+    const scaleX = sprite.width / 100;
+    const scaleY = sprite.height / 100;
+    selectionSprite.visible = true;
+    selectionSprite.scale.setTo(scaleX, scaleY);
+    spaceObject.sprite.addChild(selectionSprite);
+    selectedSpaceObject = spaceObject;
+    game.map.forceRefresh();
+  });
 
-  EZGUI.create(StarfieldWindow, THEME);
-  EZGUI.create(openStarfieldButton, THEME);
+  eventEmitter.on(EVENT_SPACE_OBJECT_SELECTION_CANCELED, () => {
+    if (selectionSprite.visible) {
+      game.map.forceRefresh();
+    }
+    selectionSprite.visible = false;
+  });
+}
 
+function addRemoveSpaceObjectListener(game, phaserGame) {
+  game.userKeyboard.on('key/delete', () => {
+    if (!selectedSpaceObject) return;
+    removeSpaceObject(game, selectedSpaceObject);
+    Exporter.getInstance().removeSpaceObject(selectedSpaceObject);
+    selectedSpaceObject = null;
+  });
+}
+
+function removeSpaceObject(game, spaceObject) {
+  const starfield = game.map.getStarfield();
+  const deepSpaceLayer = starfield.getDeepSpaceLayer();
+  const spaceObjects = deepSpaceLayer.spaceObjects;
+  for (let i = spaceObjects.length - 1; i >= 0; i--) {
+    if (spaceObjects[i] === spaceObject) {
+      spaceObjects.splice(i, 1);
+      game.map.forceRefresh();
+      return;
+    }
+  }
+}
+
+function addWindowListeners(game, EZGUI, phaserGame) {
+  const eventEmitter = EventEmitter.getInstance();
   const openButton = EZGUI.components.openStarfieldButton;
   const closeButton = EZGUI.components.closeStarfieldButton;
   const resetButton = EZGUI.components.resetStarfieldSelectionButton;
@@ -296,8 +400,30 @@ function create(game, EZGUI, phaserGame) {
   eventEmitter.on('windowClosed', () => {
     placementWindow.width = gameWidth - openStarfieldButton.width;
   });
+}
 
+function create(game, EZGUI, phaserGame) {
+  const eventEmitter = EventEmitter.getInstance();
+
+  // generates the Pixi GUI objects
+  EZGUI.create(StarfieldWindow, THEME);
+  EZGUI.create(openStarfieldButton, THEME);
+
+  // basic listeners to make the window togglable
+  addWindowListeners(game, EZGUI, phaserGame);
+
+  // selection sprite that is added to the selected space objects
+  createSelectionSprite(game);
+
+  // adds listeners to mouse click to select space objects
+  addSelectSpaceObjectListener(game, phaserGame);
+  addSelectionListeners(game);
+
+  // adds listeners to mouse click to place space object onto the map
   addPlacementListener(game, EZGUI, phaserGame);
+  addRemoveSpaceObjectListener(game, phaserGame);
+
+  // external components
   SpaceObjectsList.addEventListeners(game, EZGUI, phaserGame);
 }
 

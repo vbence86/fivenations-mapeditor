@@ -84,6 +84,23 @@ class Exporter {
   }
 
   /**
+   * Removes the saved configuration of the given spaceObject
+   * @param {object} spaceObject
+   */
+  removeSpaceObject(spaceObject) {
+    for (let i = this.spaceObjects.length - 1; i >= 0; i--) {
+      if (
+        this.spaceObjects[i].x === spaceObject.x &&
+        this.spaceObjects[i].y === spaceObject.y &&
+        this.spaceObjects[i].z === spaceObject.z
+      ) {
+        this.spaceObjects.splice(i, 1);
+        return;
+      }
+    }
+  }
+
+  /**
    * Creates or Overwrites the given player attributes by the idx attr
    * @param {object} player attributes
    */
