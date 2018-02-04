@@ -88,7 +88,7 @@ class Exporter {
    * @param {object} spaceObject
    */
   removeSpaceObject(spaceObject) {
-    for (let i = this.spaceObjects.length - 1; i >= 0; i--) {
+    for (let i = this.spaceObjects.length - 1; i >= 0; i -= 1) {
       if (
         this.spaceObjects[i].x === spaceObject.x &&
         this.spaceObjects[i].y === spaceObject.y &&
