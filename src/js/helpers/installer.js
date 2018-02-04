@@ -1,6 +1,7 @@
-/* global FiveNations */
+/* global FiveNations, window */
 import { PLAYERS_COUNT } from './consts';
 
+const ns = window.fivenations;
 const canvasElmId = 'fivenations-game';
 const app = new FiveNations({ canvasElmId });
 const scriptBox = FiveNations.Scriptbox.getInstance();
@@ -8,6 +9,10 @@ const scriptBox = FiveNations.Scriptbox.getInstance();
 function installFiveNations() {
   return new Promise((resolve) => {
     scriptBox.add('default', (game) => {
+      // we mediate that the game must run in mapEditorMode
+      ns.mapEditorMode = true;
+
+      // default map
       game.map.new({
         width: 96,
         height: 96,
@@ -24,6 +29,7 @@ function installFiveNations() {
         });
       }
 
+      // FogOfWar must be shut down
       game.map.getFogOfWarRenderer().hide();
 
       resolve(game);

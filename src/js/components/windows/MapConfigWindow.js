@@ -382,6 +382,8 @@ function create(game, EZGUI, phaserGame) {
     game.map.new(config);
     game.map.getFogOfWarRenderer().hide();
 
+    game.entityManager.reset();
+
     Selector.getInstance().reset();
   });
 }

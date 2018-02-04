@@ -5,6 +5,7 @@ import {
   ENTITY_TAB_FEDERATION,
   ENTITY_TAB_MISC,
 } from '../../helpers/consts';
+import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
 import Selector from '../../helpers/Selector';
 import EventEmitter from '../../helpers/EventEmitter';
@@ -42,8 +43,6 @@ const tabButtonConfig = {
 let expanded = false;
 let animating = false;
 const activeTab = ENTITY_TAB_FEDERATION;
-// it starts from 1 to avoid having fake falshy values
-let customGUIDCounter = 1;
 
 const openEntitiesButton = {
   id: 'openEntitiesButton',
@@ -216,15 +215,13 @@ function addEventListenersToTabButtons(EZGUI) {
 }
 
 function placeEntity(game, config) {
+  const guid = Utils.getGUID();
   const extendedConfig = {
-    guid: customGUIDCounter,
+    guid,
     ...config,
   };
-
   game.eventEmitter.synced.entities.add(extendedConfig);
   Exporter.getInstance().addEntity(extendedConfig);
-
-  customGUIDCounter += 1;
 }
 
 function addPlacementListener(game, EZGUI, phaserGame) {
