@@ -63,9 +63,6 @@ const spaceObjects = [
   'galaxy10',
   'galaxy11',
   'galaxy12',
-  'smallmeteorites1',
-  'smallmeteorites2',
-  'smallmeteorites3',
 ];
 
 function createButton(id) {
