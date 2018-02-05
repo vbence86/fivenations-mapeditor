@@ -27,7 +27,7 @@ const openPlayersButton = {
   skin: 'bluebutton',
   position: {
     x: -120 + gameWidth,
-    y: 82,
+    y: 123,
   },
   width: 120,
   height: 40,

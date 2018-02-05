@@ -55,7 +55,7 @@ const openEntitiesButton = {
   skin: 'bluebutton',
   position: {
     x: -120 + gameWidth,
-    y: 123,
+    y: 164,
   },
   width: 120,
   height: 40,

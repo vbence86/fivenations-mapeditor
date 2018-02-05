@@ -129,8 +129,8 @@ class Exporter {
   /**
    * Triggers a native download of the exported JSON
    */
-  download() {
-    saveJSON(this.export(), this.map.name || 'map.json');
+  download(filename) {
+    saveJSON(this.export(), filename || 'map.json');
   }
 }
 

@@ -2,6 +2,7 @@
 import { THEME } from '../../helpers/consts';
 import Exporter from '../../helpers/Exporter';
 import EventEmitter from '../../helpers/EventEmitter';
+import Selector from '../../helpers/Selector';
 
 const ns = window.fivenations;
 const gameWidth = ns.window.width;
@@ -50,7 +51,7 @@ const openMapConfigButton = {
   skin: 'bluebutton',
   position: {
     x: -120 + gameWidth,
-    y: 0,
+    y: 41,
   },
   width: 120,
   height: 40,

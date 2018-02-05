@@ -1,6 +1,7 @@
 /* global window */
 import { THEME } from './helpers/consts';
 import installFiveNations from './helpers/installer';
+import FileWindow from './components/windows/FileWindow';
 import MapConfigWindow from './components/windows/MapConfigWindow';
 import StarfieldWindow from './components/windows/StarfieldWindow';
 import PlayersWindow from './components/windows/PlayersWindow';
@@ -22,6 +23,7 @@ installFiveNations().then((game) => {
   EZGUI.Theme.load([themeUrl], () => {
     // create the gui
     const components = [
+      FileWindow,
       MapConfigWindow,
       StarfieldWindow,
       PlayersWindow,

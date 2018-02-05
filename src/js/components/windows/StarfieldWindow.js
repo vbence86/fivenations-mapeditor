@@ -38,7 +38,7 @@ const openStarfieldButton = {
   skin: 'bluebutton',
   position: {
     x: -120 + gameWidth,
-    y: 41,
+    y: 82,
   },
   width: 120,
   height: 40,
@@ -265,10 +265,10 @@ function addPlacementListener(game, EZGUI, phaserGame) {
 }
 
 function isMouseOverSpaceObject(pointer, spaceObject, phaserGame) {
-  const x = spaceObject.x - phaserGame.camera.x * spaceObject.z;
-  const y = spaceObject.y - phaserGame.camera.y * spaceObject.z;
   const width = spaceObject.sprite.width;
   const height = spaceObject.sprite.height;
+  const x = spaceObject.x - width / 2 - phaserGame.camera.x * spaceObject.z;
+  const y = spaceObject.y - height / 2 - phaserGame.camera.y * spaceObject.z;
   return (
     pointer.x >= x &&
     pointer.x <= x + width &&
@@ -319,6 +319,7 @@ function createSelectionSprite(game) {
 
   // use the bitmap data as the texture for the sprite
   selectionSprite = game.add.sprite(0, 0, bmd);
+  selectionSprite.anchor.setTo(0.5, 0.5);
   selectionSprite.visible = false;
 }
 
