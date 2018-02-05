@@ -15,9 +15,6 @@ const themeUrl = `${urlPrefix}${EZGUIPublicUrl}kenney-theme/kenney-theme.json`;
 installFiveNations().then((game) => {
   const phaserGame = game.game;
 
-  // pause the game
-  game.paused = true;
-
   // Set EZGUI renderer
   EZGUI.renderer = phaserGame.renderer;
 
@@ -33,10 +30,6 @@ installFiveNations().then((game) => {
 
     components.forEach((component) => {
       component.create(game, EZGUI, phaserGame);
-    });
-
-    game.userPointer.on('rightbutton/down', () => {
-      Selector.getInstance().reset();
     });
   });
 });
