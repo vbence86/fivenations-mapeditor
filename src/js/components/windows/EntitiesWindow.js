@@ -256,6 +256,12 @@ function addRemoveListener(game) {
   });
 }
 
+function addRightMouseButtonListener(game) {
+  game.userPointer.on('rightbutton/down', () => {
+    Selector.getInstance().reset();
+  });
+}
+
 function create(game, EZGUI, phaserGame) {
   const eventEmitter = EventEmitter.getInstance();
 
@@ -300,6 +306,7 @@ function create(game, EZGUI, phaserGame) {
   addEventListenersToTabButtons(EZGUI);
   addPlacementListener(game, EZGUI, phaserGame);
   addRemoveListener(game);
+  addRightMouseButtonListener(game);
 }
 
 export default {

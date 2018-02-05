@@ -34,5 +34,9 @@ installFiveNations().then((game) => {
     components.forEach((component) => {
       component.create(game, EZGUI, phaserGame);
     });
+
+    game.userPointer.on('rightbutton/down', () => {
+      Selector.getInstance().reset();
+    });
   });
 });
