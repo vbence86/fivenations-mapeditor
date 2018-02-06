@@ -129,30 +129,26 @@ function toogleWindow(EZGUI, phaserGame) {
 }
 
 function addImportButtonListener(game, EZGUI) {
-  EZGUI.components.exportMapButton.on('click', () => {
-    Importer.getInstance()
-      .import(game)
-      .then(() => {
-        game.entityManager().reset();
+  EZGUI.components.importMapButton.on('click', () => {
+    const importer = Importer.getInstance();
+    importer.import().then(() => {
+      importer.loadMap(game);
 
-        const mapConfig = Importer.getMap();
-        game.map.new(mapConfig);
-
-        Importer.getEntities().forEach((config) => {
-          game.eventEmitter.synced.entities.add(config);
-        });
-
-        Importer.getSpaceObjects().forEach((config) => {
-          game.map
-            .getStarfield()
-            .getDeepSpaceLayer()
-            .add(config);
-        });
-
-        game.map.forceRefresh();
-
-        Importer.updateExporter(Exporter.getInstance());
+      const players = importer.getPlayers();
+      Object.keys(players).forEach((idx) => {
+        if (players[idx].active) {
+          EZGUI.components[`playerActiveCheckbox${idx}`].checked = true;
+        }
+        if (players[idx].neutral) {
+          EZGUI.components[`playerNautralCheckbox${idx}`].checked = true;
+        }
       });
+
+      game.map.getFogOfWarRenderer().hide();
+      game.map.forceRefresh();
+
+      importer.updateExporter(Exporter.getInstance());
+    });
     Selector.getInstance().reset();
   });
 }

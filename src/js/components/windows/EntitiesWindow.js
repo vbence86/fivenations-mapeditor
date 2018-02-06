@@ -4,6 +4,7 @@ import {
   CATEGORY_ENTITIES,
   ENTITY_TAB_FEDERATION,
   ENTITY_TAB_MISC,
+  GUI_PANEL_HEIGHT,
 } from '../../helpers/consts';
 import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
@@ -21,7 +22,7 @@ const offsetClosed = gameWidth;
 const hLayoutBlock = 64;
 const placementWindow = {
   width: gameWidth,
-  height: gameHeight,
+  height: gameHeight - GUI_PANEL_HEIGHT,
 };
 
 const tabButtonIds = [
@@ -232,6 +233,7 @@ function addPlacementListener(game, EZGUI, phaserGame) {
     const scale = EZGUI.components.spaceObjectsAttributeScale.value + 1;
 
     if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
+    if (coords.y - phaserGame.camera.y >= placementWindow.height) return;
     if (!selector.isActive()) return;
     if (selector.getCategory() !== CATEGORY_ENTITIES) return;
     if (!selector.getSelectedPlayer()) {

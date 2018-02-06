@@ -16,3 +16,5 @@ export const EVENT_ON_SELECTOR_RESET = 'onSelectorReset';
 export const EVENT_SPACE_OBJECT_SELECTED = 'onSpaceObjectSelected';
 export const EVENT_SPACE_OBJECT_SELECTION_CANCELLED =
   'onSpaceObjectSelectionCancelled';
+
+export const GUI_PANEL_HEIGHT = 222;

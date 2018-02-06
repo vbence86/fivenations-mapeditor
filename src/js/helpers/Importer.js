@@ -9,18 +9,20 @@ let singleton;
  */
 function loadJSON() {
   return new Promise((resolve, rejected) => {
-    const { files } = document.getElementById('selectFiles');
-    if (files && files.length <= 0) {
-      rejected();
-    }
-    const fr = new FileReader();
-    fr.onload = function onload(e) {
-      const result = JSON.parse(e.target.result);
-      const formatted = JSON.stringify(result, null, 2);
-      resolve(formatted);
+    const elm = document.getElementById('selectFile');
+    elm.click();
+    elm.onchange = function onchange(event) {
+      const targetFile = event.target.files[0];
+      if (!targetFile) {
+        rejected();
+      }
+      const reader = new FileReader();
+      reader.onload = function onload(e) {
+        const result = JSON.parse(e.target.result);
+        resolve(result);
+      };
+      reader.readAsText(targetFile);
     };
-
-    fr.readAsText(files.item(0));
   });
 }
 
@@ -39,21 +41,21 @@ class Importer {
    * Returns all the space objects
    */
   getSpaceObjects() {
-    return this.spaceObjects;
+    return this.spaceObjects || [];
   }
 
   /**
    * Returns all the entities
    */
   getEntities() {
-    return this.entities;
+    return this.entities || [];
   }
 
   /**
    * Returns all the players
    */
   getPlayers() {
-    return this.players;
+    return this.players || {};
   }
 
   /**
@@ -61,10 +63,32 @@ class Importer {
    * @return {Promise}
    */
   import() {
-    return loadJSON((json) => {
+    return loadJSON().then((json) => {
       Object.keys(json).forEach((key) => {
         this[key] = json[key];
       });
+    });
+  }
+
+  /**
+   * Loads all the exported components and entities into the Game
+   * @param {object} game - FiveNations Game Scene
+   */
+  loadMap(game) {
+    const mapConfig = this.getMap();
+    game.map.new(mapConfig);
+
+    game.entityManager.reset();
+
+    this.getEntities().forEach((config) => {
+      game.eventEmitter.synced.entities.add(config);
+    });
+
+    this.getSpaceObjects().forEach((config) => {
+      game.map
+        .getStarfield()
+        .getDeepSpaceLayer()
+        .add(config);
     });
   }
 

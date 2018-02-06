@@ -2,6 +2,12 @@
 /* eslint no-param-reassign: 0 */
 let singleton;
 
+// Default map configuration object
+const defaultMapConfig = {
+  width: 96,
+  height: 96,
+};
+
 /**
  * Function to download the given JSON as a json file through browser
  * adapted from http://bgrins.github.io/devtools-snippets/#console-save
@@ -36,6 +42,13 @@ function saveJSON(data, filename = 'export.json') {
  * that can be turned into JSON format and downloaded through the browser
  */
 class Exporter {
+  /**
+   * Sets default export values
+   */
+  constructor() {
+    this.map = defaultMapConfig;
+  }
+
   /**
    * Persits the given basic configuration of the map
    * @param {object} map - Holds the fundamental information about the current map

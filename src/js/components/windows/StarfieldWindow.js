@@ -4,6 +4,7 @@ import {
   CATEGORY_SPACE_OBJECTS,
   EVENT_SPACE_OBJECT_SELECTED,
   EVENT_SPACE_OBJECT_SELECTION_CANCELED,
+  GUI_PANEL_HEIGHT,
 } from '../../helpers/consts';
 import EventEmitter from '../../helpers/EventEmitter';
 import Selector from '../../helpers/Selector';
@@ -19,7 +20,7 @@ const offsetExpadend = gameWidth - width;
 const offsetClosed = gameWidth;
 const placementWindow = {
   width: gameWidth,
-  height: gameHeight,
+  height: gameHeight - GUI_PANEL_HEIGHT,
 };
 
 let expanded = false;
@@ -251,6 +252,7 @@ function addPlacementListener(game, EZGUI, phaserGame) {
     const scale = EZGUI.components.spaceObjectsAttributeScale.value + 1;
 
     if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
+    if (coords.y - phaserGame.camera.y >= placementWindow.height) return;
     if (!selector.isActive()) return;
     if (selector.getCategory() !== CATEGORY_SPACE_OBJECTS) return;
 
