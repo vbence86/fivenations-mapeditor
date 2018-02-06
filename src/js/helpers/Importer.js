@@ -1,4 +1,4 @@
-/* global window, document, Blob, MouseEvent */
+/* global document, FileReader */
 /* eslint no-param-reassign: 0 */
 let singleton;
 
@@ -9,12 +9,12 @@ let singleton;
  */
 function loadJSON() {
   return new Promise((resolve, rejected) => {
-    const files = document.getElementById('selectFiles').files;
+    const { files } = document.getElementById('selectFiles');
     if (files && files.length <= 0) {
       rejected();
     }
     const fr = new FileReader();
-    fr.onload = function (e) {
+    fr.onload = function onload(e) {
       const result = JSON.parse(e.target.result);
       const formatted = JSON.stringify(result, null, 2);
       resolve(formatted);

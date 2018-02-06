@@ -75,8 +75,8 @@ class Exporter {
     if (!this.entities) {
       return;
     }
-    for (let i = 0, l = this.entities; i < l; i += 1) {
-      if (this.entities[i].getGUID() === guid) {
+    for (let i = 0, l = this.entities.length; i < l; i += 1) {
+      if (this.entities[i].guid === guid) {
         this.entities.splice(i, 1);
         return;
       }
@@ -112,10 +112,7 @@ class Exporter {
     if (!this.players[idx]) {
       this.players[idx] = {};
     }
-    this.players[idx] = {
-      config,
-      ...this.players[idx],
-    };
+    this.players[idx] = config;
   }
 
   /**

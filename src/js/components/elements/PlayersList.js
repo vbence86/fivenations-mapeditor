@@ -100,18 +100,15 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     });
 
     const activeButton = EZGUI.components[`playerActiveCheckbox${i}`];
-    activeButton.on('click', () => {
-      Exporter.getInstance().setPlayer({
-        idx: i,
-        active: !!activeButton.checked,
-      });
-    });
+    const neutralButton = EZGUI.components[`playerNautralCheckbox${i}`];
 
-    const neautralButton = EZGUI.components[`playerNautralCheckbox${i}`];
-    neautralButton.on('click', () => {
-      Exporter.getInstance().setPlayer({
-        idx: i,
-        neutral: !!neautralButton.checked,
+    [activeButton, neutralButton].forEach((button) => {
+      button.on('click', () => {
+        Exporter.getInstance().setPlayer({
+          idx: i,
+          active: !!activeButton.checked,
+          neutral: !!neutralButton.checked,
+        });
       });
     });
   }
