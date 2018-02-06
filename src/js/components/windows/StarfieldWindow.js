@@ -251,8 +251,8 @@ function addPlacementListener(game, EZGUI, phaserGame) {
     const z = EZGUI.components.spaceObjectsAttributeZ.value * 0.9 + 0.1;
     const scale = EZGUI.components.spaceObjectsAttributeScale.value + 1;
 
-    if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
-    if (coords.y - phaserGame.camera.y >= placementWindow.height) return;
+    if (coords.x >= placementWindow.width) return;
+    if (coords.y >= placementWindow.height) return;
     if (!selector.isActive()) return;
     if (selector.getCategory() !== CATEGORY_SPACE_OBJECTS) return;
 
