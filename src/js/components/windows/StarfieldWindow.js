@@ -331,6 +331,7 @@ function addSelectionListeners(game) {
     const sprite = spaceObject.sprite;
     const scaleX = sprite.width / 100;
     const scaleY = sprite.height / 100;
+
     selectionSprite.visible = true;
     selectionSprite.scale.setTo(scaleX, scaleY);
     spaceObject.sprite.addChild(selectionSprite);
