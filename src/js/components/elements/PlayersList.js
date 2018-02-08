@@ -105,9 +105,9 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     [activeButton, neutralButton].forEach((button) => {
       button.on('click', () => {
         Exporter.getInstance().setPlayer({
-          idx: i,
+          team: i,
           active: !!activeButton.checked,
-          neutral: !!neutralButton.checked,
+          independent: !!neutralButton.checked,
         });
       });
     });
