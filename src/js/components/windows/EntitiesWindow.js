@@ -3,6 +3,10 @@ import {
   THEME,
   CATEGORY_ENTITIES,
   ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_ATHRAEL,
+  ENTITY_TAB_SYLON,
+  ENTITY_TAB_THORUN,
+  ENTITY_TAB_ZHOGARN,
   ENTITY_TAB_MISC,
   GUI_PANEL_HEIGHT,
 } from '../../helpers/consts';
@@ -27,10 +31,10 @@ const placementWindow = {
 
 const tabButtonIds = [
   ENTITY_TAB_FEDERATION,
-  ENTITY_TAB_FEDERATION,
-  ENTITY_TAB_FEDERATION,
-  ENTITY_TAB_FEDERATION,
-  ENTITY_TAB_FEDERATION,
+  ENTITY_TAB_ATHRAEL,
+  ENTITY_TAB_SYLON,
+  ENTITY_TAB_THORUN,
+  ENTITY_TAB_ZHOGARN,
   ENTITY_TAB_MISC,
 ];
 
@@ -160,11 +164,11 @@ const entitiesWindow = {
     },
     createEntityTabLayout(),
     EntitiesTabs.getGUIDefinition(ENTITY_TAB_FEDERATION),
+    EntitiesTabs.getGUIDefinition(ENTITY_TAB_ATHRAEL),
+    EntitiesTabs.getGUIDefinition(ENTITY_TAB_SYLON),
+    EntitiesTabs.getGUIDefinition(ENTITY_TAB_THORUN),
+    EntitiesTabs.getGUIDefinition(ENTITY_TAB_ZHOGARN),
     EntitiesTabs.getGUIDefinition(ENTITY_TAB_MISC),
-    null,
-    null,
-    null,
-    null,
     null,
     null,
     null,
