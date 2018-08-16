@@ -231,10 +231,11 @@ function placeEntity(game, config) {
 
 function addPlacementListener(game, EZGUI, phaserGame) {
   game.userPointer.on('leftbutton/down', (mousePointer) => {
-    const coords = mousePointer.getRealCoords();
+    let coords = mousePointer.getRealCoords();
     const selector = Selector.getInstance();
     const z = EZGUI.components.spaceObjectsAttributeZ.value * 0.9 + 0.1;
     const scale = EZGUI.components.spaceObjectsAttributeScale.value + 1;
+    const tabWidth = expanded ? width : 0;
 
     if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
     if (coords.y - phaserGame.camera.y >= placementWindow.height) return;
@@ -245,6 +246,15 @@ function addPlacementListener(game, EZGUI, phaserGame) {
     if (!selector.getSelectedPlayer()) {
       alert('Select a Player first in the Player Window!');
       return;
+    }
+
+    if (ns.BPDActivated) {
+      const BPD = ns.game.GUI.getBuildingPlacementDisplay();
+
+      if (!BPD.canConstructThere()) return;
+
+      // updates the coordinates based on the BPD position
+      coords = BPD.getPlacementCoords();
     }
 
     placeEntity(game, {

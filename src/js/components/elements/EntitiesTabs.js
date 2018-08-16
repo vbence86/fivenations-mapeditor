@@ -1,3 +1,4 @@
+/* global window */
 import {
   CATEGORY_ENTITIES,
   ENTITY_TAB_FEDERATION,
@@ -10,6 +11,8 @@ import {
 } from '../../helpers/consts';
 import Selector from '../../helpers/Selector';
 import EventEmitter from '../../helpers/EventEmitter';
+
+const ns = window.fivenations;
 
 const width = 400;
 const buttonWidth = 80;
@@ -173,7 +176,7 @@ const entities = {
     'asteroiduranium1',
     'asteroiduranium2',
     'asteroiduraniumsmall1',
-    'asteroiduraniumsmall2',  
+    'asteroiduraniumsmall2',
     'asteroid1',
     'asteroid2',
     'asteroid3',
@@ -353,7 +356,9 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     spriteObj.frame = DO.customFrame || 1;
 
     if (entities[ENTITY_TAB_MISC].indexOf(id) !== -1) {
-      spriteObj.frame = DO.animations['idle-forever'].frames[0];
+      const animationOffset = DO.animationOffset || 2;
+      spriteObj.frame =
+        DO.animations['idle-forever'].frames[0] + animationOffset;
     }
 
     const clone = phaserGame.make.sprite(0, 0, spriteObj.generateTexture());
@@ -372,6 +377,15 @@ function addButtonListeners(game, EZGUI, phaserGame) {
         category: CATEGORY_ENTITIES,
         id,
       });
+      // activates the BuildingPlacementDisplay
+      const BPD = ns.game.GUI.getBuildingPlacementDisplay();
+      BPD.deactivate();
+      ns.BPDActivated = false;
+
+      if (DO.building) {
+        BPD.activate(id);
+        ns.BPDActivated = true;
+      }
     });
   });
 }
