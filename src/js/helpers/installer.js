@@ -6,12 +6,11 @@ const canvasElmId = 'fivenations-game';
 const app = new FiveNations({ canvasElmId });
 const scriptBox = FiveNations.Scriptbox.getInstance();
 
+ns.mapEditorMode = true;
+
 function installFiveNations() {
   return new Promise((resolve) => {
     scriptBox.add('default', (game) => {
-      // we mediate that the game must run in mapEditorMode
-      ns.mapEditorMode = true;
-
       // default map
       game.map.new({
         width: 96,

@@ -26,7 +26,7 @@ const offsetClosed = gameWidth;
 const hLayoutBlock = 64;
 const placementWindow = {
   width: gameWidth,
-  height: gameHeight - GUI_PANEL_HEIGHT,
+  height: gameHeight,
 };
 
 const tabButtonIds = [
@@ -238,6 +238,8 @@ function addPlacementListener(game, EZGUI, phaserGame) {
 
     if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
     if (coords.y - phaserGame.camera.y >= placementWindow.height) return;
+    // minimap
+    if (coords.x <= 182 && coords.y > placementWindow.height - 178) return;
     if (!selector.isActive()) return;
     if (selector.getCategory() !== CATEGORY_ENTITIES) return;
     if (!selector.getSelectedPlayer()) {

@@ -20,7 +20,7 @@ const offsetExpadend = gameWidth - width;
 const offsetClosed = gameWidth;
 const placementWindow = {
   width: gameWidth,
-  height: gameHeight - GUI_PANEL_HEIGHT,
+  height: gameHeight,
 };
 
 let expanded = false;
@@ -253,6 +253,9 @@ function addPlacementListener(game, EZGUI, phaserGame) {
 
     if (coords.x >= placementWindow.width) return;
     if (coords.y >= placementWindow.height) return;
+    // minimap
+    if (coords.x <= 182 && coords.y > placementWindow.height - 178) return;
+
     if (!selector.isActive()) return;
     if (selector.getCategory() !== CATEGORY_SPACE_OBJECTS) return;
 
