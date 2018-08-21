@@ -71,13 +71,24 @@ class Exporter {
 
   /**
    * Saves the config object used to add an Entity to the world
-   * @param {object} config - Contains all required information about the SpaceObject
+   * @param {object} config - Contains all required information about the Entity
    */
   addEntity(config) {
     if (!this.entities) {
       this.entities = [];
     }
     this.entities.push(config);
+  }
+
+  /**
+   * Saves the config object used to add an Effect to the world
+   * @param {object} config - Contains all required information about the Effect
+   */
+  addEffect(config) {
+    if (!this.effects) {
+      this.effects = [];
+    }
+    this.effects.push(config);
   }
 
   /**

@@ -49,6 +49,86 @@ let expanded = false;
 let animating = false;
 const activeTab = ENTITY_TAB_FEDERATION;
 
+const canBePlacedOnTopOfObstacles = [
+  'asteroidswarm1',
+  'asteroidswarm2',
+  'asteroidswarm3',
+  'asteroidswarm4',
+  'asteroidswarm5',
+  'asteroidswarm6',
+  'asteroidswarm7',
+  'asteroidswarm8',
+  'obj_asteroids_ice1',
+  'obj_asteroids_ice2',
+  'obj_asteroids_ice3',
+  'obj_asteroids_ice4',
+  'obj_asteroids_ice5',
+  'obj_asteroids_ice6',
+  'obj_asteroids_ice7',
+  'obj_asteroids_ice8',
+  'obj_asteroids_ice9',
+  'obj_asteroids_ice10',
+  'obj_asteroids_ice11',
+  'obj_asteroids_normal1',
+  'obj_asteroids_normal2',
+  'obj_asteroids_normal3',
+  'obj_asteroids_normal4',
+  'obj_asteroids_normal5',
+  'obj_asteroids_normal6',
+  'obj_asteroids_normal7',
+  'obj_asteroids_normal8',
+  'obj_asteroids_normal9',
+  'obj_asteroids_normal10',
+  'obj_asteroids_normal11',
+  'obj_asteroids_normal12',
+  'obj_asteroids_normal13',
+  'obj_asteroids_vulcanic1',
+  'obj_asteroids_vulcanic2',
+  'obj_asteroids_vulcanic3',
+  'obj_asteroids_vulcanic4',
+  'obj_asteroids_vulcanic5',
+  'obj_asteroids_vulcanic6',
+  'obj_asteroids_vulcanic7',
+  'obj_asteroids_vulcanic8',
+  'obj_asteroids_vulcanic9',
+  'obj_asteroids_vulcanic10',
+  'obj_asteroids_vulcanic11',
+  'obj_asteroids_vulcanic12',
+  'obj_izlar_extremophytes1',
+  'obj_izlar_extremophytes2',
+  'obj_izlar_extremophytes3',
+  'obj_izlar_extremophytes4',
+  'obj_izlar_extremophytes5',
+  'obj_izlar_extremophytes6',
+  'obj_izlar_extremophytes7',
+  'obj_izlar_extremophytes8',
+  'obj_izlar_izlaroflora1',
+  'obj_izlar_izlaroflora2',
+  'obj_izlar_izlaroflora3',
+  'obj_izlar_izlaroflora4',
+  'obj_izlar_izlaroflora5',
+  'obj_izlar_izlaroflora6',
+  'obj_izlar_izlaroflora7',
+  'obj_izlar_izlaroflora8',
+  'obj_izlar_izlaroflora9',
+  'obj_izlar_izlaroflora10',
+  'obj_izlar_izlaroflora11',
+  'obj_izlar_jellytree1',
+  'obj_izlar_jellytree2',
+  'obj_izlar_jellytree3',
+  'obj_lonsdaleites1',
+  'obj_lonsdaleites2',
+  'obj_lonsdaleites3',
+  'obj_lonsdaleites4',
+  'obj_lonsdaleites5',
+  'obj_lonsdaleites6',
+  'obj_lonsdaleites7',
+  'obj_lonsdaleites8',
+  'obj_sylonwalls1',
+  'obj_sylonwalls2',
+  'obj_sylonwalls3',
+];
+
 const openEntitiesButton = {
   id: 'openEntitiesButton',
   text: 'Entities',
@@ -251,7 +331,12 @@ function addPlacementListener(game, EZGUI, phaserGame) {
     if (ns.BPDActivated) {
       const BPD = ns.game.GUI.getBuildingPlacementDisplay();
 
-      if (!BPD.canConstructThere()) return;
+      // if the entity cannot be placed to the selected area and it's
+      // not in the list of entities that can share tiles with obstacles
+      if (
+        !BPD.canConstructThere() &&
+        canBePlacedOnTopOfObstacles.indexOf(selector.getId()) === -1
+      ) { return; }
 
       // updates the coordinates based on the BPD position
       coords = BPD.getPlacementCoords();
@@ -309,6 +394,8 @@ function create(game, EZGUI, phaserGame) {
   });
 
   resetButton.on('click', () => {
+    const BPD = ns.game.GUI.getBuildingPlacementDisplay();
+    BPD.deactivate();
     Selector.getInstance().reset();
   });
 

@@ -6,6 +6,7 @@ import MapConfigWindow from './components/windows/MapConfigWindow';
 import StarfieldWindow from './components/windows/StarfieldWindow';
 import PlayersWindow from './components/windows/PlayersWindow';
 import EntitiesWindow from './components/windows/EntitiesWindow';
+import EffectsWindow from './components/windows/EffectsWindow';
 
 const urlPrefix = window.location;
 const EZGUIPublicUrl = 'resources/EZGUI/';
@@ -15,6 +16,10 @@ const themeUrl = `${urlPrefix}${EZGUIPublicUrl}kenney-theme/kenney-theme.json`;
 
 installFiveNations().then((game) => {
   const phaserGame = game.game;
+
+  // shows the loading indicator while EZGUI sets up the layout
+  const overlay = document.getElementById('overlay');
+  overlay.classList.remove('hidden');
 
   // Set EZGUI renderer
   EZGUI.renderer = phaserGame.renderer;
@@ -28,10 +33,13 @@ installFiveNations().then((game) => {
       StarfieldWindow,
       PlayersWindow,
       EntitiesWindow,
+      EffectsWindow,
     ];
 
     components.forEach((component) => {
       component.create(game, EZGUI, phaserGame);
     });
+
+    overlay.classList.add('hidden');
   });
 });

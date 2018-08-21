@@ -1,0 +1,27 @@
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  left: 0;
+  opacity: 1;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.overlay .overlay-loader {
+  background-image: url('./loader.gif');
+  height: 198px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  width: 198px;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s .75s, opacity .75s linear;
+  -webkit-transition: visibility 0s .75s, opacity .75s linear;
+}

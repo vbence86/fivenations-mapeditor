@@ -286,6 +286,23 @@ const entities = {
   ],
 };
 
+/**
+ * Returns the id of the frame that should be displayed when the
+ * BuildingPlacementDisplay is activated
+ * @param {object} data - DataObject of the entity against which
+ * the BuildingPlacementDisplay has been activated
+ * @return {number} the frame of the entity that should be displayed
+ */
+function getDisplayFrame(data) {
+  if (data.customFrame) return data.customFrame;
+  if (data.animations && data.animations['idle-forever']) {
+    if (data.animations['idle-forever'].frames.length === 1) {
+      return data.animations['idle-forever'].frames[0];
+    }
+  }
+  return 4;
+}
+
 function createButton(id) {
   return {
     component: 'Button',
@@ -356,9 +373,7 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     spriteObj.frame = DO.customFrame || 1;
 
     if (entities[ENTITY_TAB_MISC].indexOf(id) !== -1) {
-      const animationOffset = DO.animationOffset || 2;
-      spriteObj.frame =
-        DO.animations['idle-forever'].frames[0] + animationOffset;
+      spriteObj.frame = getDisplayFrame(DO);
     }
 
     const clone = phaserGame.make.sprite(0, 0, spriteObj.generateTexture());

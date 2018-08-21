@@ -1,7 +1,9 @@
+/* global window */
 import Selector from '../../helpers/Selector';
 import Exporter from '../../helpers/Exporter';
 import { PLAYERS_COUNT } from '../../helpers/consts';
 
+const ns = window.fivenations;
 const width = 400;
 
 function createPlayerRow(i) {
@@ -93,10 +95,16 @@ function getGUIDefinition() {
 }
 
 function addButtonListeners(game, EZGUI, phaserGame) {
+  const playerManager = fivenations.game.playerManager;
   for (let i = 1, l = PLAYERS_COUNT; i <= l; i += 1) {
     const radio = EZGUI.components[`selectPlayerRadio${i}`];
     radio.on('click', () => {
       Selector.getInstance().selectPlayer(i);
+      // selects the given player as user
+      playerManager.user = undefined; // clears the cache
+      playerManager.getPlayers().forEach((player) => {
+        player.user = player.getTeam() === i;
+      });
     });
 
     const activeButton = EZGUI.components[`playerActiveCheckbox${i}`];
