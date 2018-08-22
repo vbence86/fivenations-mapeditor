@@ -283,9 +283,11 @@ function isMouseOverSpaceObject(pointer, spaceObject, phaserGame) {
 }
 
 function addSelectSpaceObjectListener(game, phaserGame) {
+  const entityManager = ns.game.entityManager;
   game.userPointer.on('leftbutton/down', (mousePointer) => {
     const selector = Selector.getInstance();
     if (selector.isActive()) return;
+    if (entityManager.entities(':selected').length > 0) return;
 
     const pointer = mousePointer.getRealCoords();
     const starfield = game.map.getStarfield();

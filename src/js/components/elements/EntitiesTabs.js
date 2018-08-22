@@ -315,7 +315,7 @@ function createButton(id) {
 
 function createButtonLayout(objects) {
   const columnPerRow = 4;
-  const rows = Math.floor(objects.length / columnPerRow);
+  const rows = Math.ceil(objects.length / columnPerRow);
   return {
     component: 'Layout',
     padding: 3,
@@ -399,6 +399,7 @@ function addButtonListeners(game, EZGUI, phaserGame) {
 
       if (DO.building) {
         BPD.activate(id);
+        BPD.canBeBuiltAnywhere = true;
         ns.BPDActivated = true;
       }
     });

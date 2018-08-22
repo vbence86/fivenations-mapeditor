@@ -9,6 +9,7 @@ import {
   ENTITY_TAB_ZHOGARN,
   ENTITY_TAB_MISC,
   GUI_PANEL_HEIGHT,
+  EVENT_SPACE_OBJECT_SELECTION_CANCELED,
 } from '../../helpers/consts';
 import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
@@ -300,12 +301,24 @@ function addEventListenersToTabButtons(EZGUI) {
 }
 
 function placeEntity(game, config) {
+  const local = EventEmitter.getInstance();
   const guid = Utils.getGUID();
   const extendedConfig = {
     guid,
     ...config,
   };
-  game.eventEmitter.synced.entities.add(extendedConfig);
+  game.eventEmitter.synced.entities
+    .add(extendedConfig)
+    .then(guid => game.entityManager.entities(guid))
+    .then((entity) => {
+      // if an entity is selected we cancel the starfield selection
+      entity.on('select', () => {
+        local.emit(EVENT_SPACE_OBJECT_SELECTION_CANCELED);
+      });
+      // removes the color indicator inside the mapeditor
+      entity.colorIndicator.hide();
+    });
+
   Exporter.getInstance().addEntity(extendedConfig);
 }
 
@@ -336,7 +349,9 @@ function addPlacementListener(game, EZGUI, phaserGame) {
       if (
         !BPD.canConstructThere() &&
         canBePlacedOnTopOfObstacles.indexOf(selector.getId()) === -1
-      ) { return; }
+      ) {
+        return;
+      }
 
       // updates the coordinates based on the BPD position
       coords = BPD.getPlacementCoords();

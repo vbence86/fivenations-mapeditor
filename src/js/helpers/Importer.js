@@ -1,5 +1,8 @@
 /* global document, FileReader */
 /* eslint no-param-reassign: 0 */
+import EventEmitter from './EventEmitter';
+import { EVENT_SPACE_OBJECT_SELECTION_CANCELED } from './consts';
+
 let singleton;
 
 /**
@@ -75,13 +78,24 @@ class Importer {
    * @param {object} game - FiveNations Game Scene
    */
   loadMap(game) {
+    const local = EventEmitter.getInstance();
     const mapConfig = this.getMap();
     game.map.new(mapConfig);
 
     game.entityManager.reset();
 
     this.getEntities().forEach((config) => {
-      game.eventEmitter.synced.entities.add(config);
+      game.eventEmitter.synced.entities
+        .add(config)
+        .then(guid => game.entityManager.entities(guid))
+        .then((entity) => {
+          // if an entity is selected we cancel the starfield selection
+          entity.on('select', () => {
+            local.emit(EVENT_SPACE_OBJECT_SELECTION_CANCELED);
+          });
+          // removes the color indicator inside the mapeditor
+          entity.colorIndicator.hide();
+        });
     });
 
     this.getSpaceObjects().forEach((config) => {
