@@ -229,9 +229,7 @@ function addPlacementListener(game, EZGUI, phaserGame) {
 }
 
 function addRemoveListener(game) {
-  game.userKeyboard.on('key/delete', () => {
-    alert('Not yet implemented!');
-  });
+  game.userKeyboard.on('key/delete', () => {});
 }
 
 function addRightMouseButtonListener(game) {

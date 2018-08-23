@@ -1,5 +1,6 @@
 /* global window, alert */
 import { THEME } from '../../helpers/consts';
+import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
 import EventEmitter from '../../helpers/EventEmitter';
 import Selector from '../../helpers/Selector';
@@ -382,6 +383,7 @@ function create(game, EZGUI, phaserGame) {
 
     game.map.new(config);
     game.map.getFogOfWarRenderer().hide();
+    Utils.revealMap(game.map);
 
     game.entityManager.reset();
 

@@ -1,5 +1,6 @@
 /* global window, alert */
 import { THEME } from '../../helpers/consts';
+import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
 import Importer from '../../helpers/Importer';
 import EventEmitter from '../../helpers/EventEmitter';
@@ -144,6 +145,7 @@ function addImportButtonListener(game, EZGUI) {
         }
       });
 
+      Utils.revealMap(game.map);
       game.map.getFogOfWarRenderer().hide();
       game.map.forceRefresh();
 

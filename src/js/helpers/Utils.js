@@ -197,7 +197,23 @@ export default {
             }
         }
         return output;
-    },         
+    },
+
+    /**
+     * Reveals the map by visiting each of the fog of war tiles
+     * @param {object} map - Instance of Map
+     */
+    revealMap: function(map) {
+        const width = map.getWidth();
+        const height = map.getHeight();
+        const fogOfWar = map.getFogOfWar();
+
+        for (let i = 0; i < width; i += 1) {
+            for (let j = 0; j < height; j += 1) {
+              fogOfWar.visit(i, j);
+            }
+        }
+    },
 
     // Eventlistener object
     EventDispatcher: (function() {
