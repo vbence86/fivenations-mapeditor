@@ -348,6 +348,7 @@ function addSelectionListeners(game) {
       game.map.forceRefresh();
     }
     selectionSprite.visible = false;
+    selectedSpaceObject = null;
   });
 }
 

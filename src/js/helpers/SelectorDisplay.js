@@ -18,8 +18,8 @@ function getDisplayFrame(id) {
   if (data.frames && data.frames.length) return data.frames[0];
   if (data.customFrame !== undefined) return data.customFrame;
   if (data.animations && data.animations['idle-forever']) {
-    if (data.animations['idle-forever'].length === 1) {
-      return data.animations['idle-forever'][0];
+    if (data.animations['idle-forever'].frames.length === 1) {
+      return data.animations['idle-forever'].frames[0];
     }
   }
   return 3;

@@ -327,6 +327,7 @@ function addSelectionListeners(game) {
   });
 
   eventEmitter.on(EVENT_EFFECT_SELECTION_CANCELED, () => {
+    selectedEffect = null;
     selectionSprite.visible = false;
   });
 }
