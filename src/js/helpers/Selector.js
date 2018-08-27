@@ -1,5 +1,5 @@
 import EventEmitter from './EventEmitter';
-import { EVENT_ON_SELECTOR_RESET } from './consts';
+import { EVENT_ON_SELECTOR_SELECT, EVENT_ON_SELECTOR_RESET } from './consts';
 
 let singleton;
 
@@ -15,6 +15,10 @@ class Selector {
   select({ id, category }) {
     this.id = id;
     this.category = category;
+    EventEmitter.getInstance().emit(EVENT_ON_SELECTOR_SELECT, {
+      id,
+      category,
+    });
   }
 
   /**

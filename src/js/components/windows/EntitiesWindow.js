@@ -378,6 +378,7 @@ function addRemoveListener(game) {
 
 function addRightMouseButtonListener(game) {
   game.userPointer.on('rightbutton/down', () => {
+    ns.BPDActivated = false;
     Selector.getInstance().reset();
   });
 }
@@ -413,6 +414,7 @@ function create(game, EZGUI, phaserGame) {
   resetButton.on('click', () => {
     const BPD = ns.game.GUI.getBuildingPlacementDisplay();
     BPD.deactivate();
+    ns.BPDActivated = false;
     Selector.getInstance().reset();
   });
 

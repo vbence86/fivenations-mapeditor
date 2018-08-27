@@ -19,6 +19,7 @@ export const ENTITY_TAB_MISC = 'Misc';
 
 export const EFFECT_TAB_MISC = 'Misc';
 
+export const EVENT_ON_SELECTOR_SELECT = 'onSelectorSelect';
 export const EVENT_ON_SELECTOR_RESET = 'onSelectorReset';
 export const EVENT_SPACE_OBJECT_SELECTED = 'onSpaceObjectSelected';
 export const EVENT_SPACE_OBJECT_SELECTION_CANCELED =

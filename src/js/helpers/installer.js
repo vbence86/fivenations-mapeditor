@@ -1,5 +1,6 @@
 /* global FiveNations, window */
 import { PLAYERS_COUNT } from './consts';
+import SelectorDisplay from './SelectorDisplay';
 
 const ns = window.fivenations;
 const canvasElmId = 'fivenations-game';
@@ -7,6 +8,14 @@ const app = new FiveNations({ canvasElmId });
 const scriptBox = FiveNations.Scriptbox.getInstance();
 
 ns.mapEditorMode = true;
+
+/**
+ * Appends the SelectorDisplay component to the GUI graphics group
+ * note: SelectorDisplay element exists only in map editor
+ */
+function addSelectorDisplayToGameStage() {
+  SelectorDisplay.addToWorld();
+}
 
 function installFiveNations() {
   return new Promise((resolve) => {
@@ -30,6 +39,8 @@ function installFiveNations() {
 
       // FogOfWar must be shut down
       game.map.getFogOfWarRenderer().hide();
+
+      addSelectorDisplayToGameStage();
 
       resolve(game);
     });

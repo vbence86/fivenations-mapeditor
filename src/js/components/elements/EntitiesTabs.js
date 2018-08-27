@@ -286,6 +286,11 @@ const entities = {
   ],
 };
 
+const excludedFromBPD = [
+  'obj_sylonwalls1',
+  'obj_sylonwalls2',
+  'obj_sylonwalls3',
+];
 /**
  * Returns the id of the frame that should be displayed when the
  * BuildingPlacementDisplay is activated
@@ -387,21 +392,22 @@ function addButtonListeners(game, EZGUI, phaserGame) {
       // attaches selector sprite to the button
       selection.visible = true;
       button.addChild(selection);
-      // updates the current selection
-      Selector.getInstance().select({
-        category: CATEGORY_ENTITIES,
-        id,
-      });
       // activates the BuildingPlacementDisplay
       const BPD = ns.game.GUI.getBuildingPlacementDisplay();
       BPD.deactivate();
       ns.BPDActivated = false;
 
-      if (DO.building) {
+      if (DO.building && excludedFromBPD.indexOf(id) === -1) {
         BPD.activate(id);
         BPD.canBeBuiltAnywhere = true;
         ns.BPDActivated = true;
       }
+
+      // updates the current selection
+      Selector.getInstance().select({
+        category: CATEGORY_ENTITIES,
+        id,
+      });
     });
   });
 }
