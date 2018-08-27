@@ -132,6 +132,9 @@ function toogleWindow(EZGUI, phaserGame) {
 function addImportButtonListener(game, EZGUI) {
   EZGUI.components.importMapButton.on('click', () => {
     const importer = Importer.getInstance();
+
+    Utils.resetCurrentMap(game);
+
     importer.import().then(() => {
       importer.loadMap(game);
 

@@ -1,5 +1,13 @@
 /* global window, alert */
-import { THEME, CATEGORY_EFFECTS, EFFECT_TAB_MISC } from '../../helpers/consts';
+import {
+  THEME,
+  CATEGORY_EFFECTS,
+  EFFECT_TAB_MISC,
+  EVENT_SPACE_OBJECT_SELECTED,
+  EVENT_SPACE_OBJECT_SELECTION_CANCELED,
+  EVENT_EFFECT_SELECTED,
+  EVENT_EFFECT_SELECTION_CANCELED,
+} from '../../helpers/consts';
 import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
 import Selector from '../../helpers/Selector';
@@ -29,6 +37,8 @@ const tabButtonConfig = {
   height: 40,
 };
 
+let selectedEffect;
+let selectionSprite;
 let expanded = false;
 let animating = false;
 
@@ -199,10 +209,25 @@ function addEventListenersToTabButtons(EZGUI) {
 
 function placeEffect(game, config) {
   const guid = Utils.getGUID();
+  const { id } = config;
+  const DO = game.cache.getJSON(id);
   const extendedConfig = {
     guid,
     ...config,
   };
+
+  if (id.indexOf('-wreckage') !== -1) {
+    let customFrame;
+    if (DO.frames && DO.frames.length > 1) {
+      customFrame = DO.frames[Utils.rnd(0, DO.frames.length)];
+    } else {
+      customFrame = DO.customFrame;
+    }
+    extendedConfig.ttlDisabled = true;
+    extendedConfig.idleDisabled = true;
+    extendedConfig.customFrame = customFrame;
+  }
+
   game.eventEmitter.synced.effects.add(extendedConfig);
   Exporter.getInstance().addEffect(extendedConfig);
 }
@@ -228,8 +253,93 @@ function addPlacementListener(game, EZGUI, phaserGame) {
   });
 }
 
-function addRemoveListener(game) {
-  game.userKeyboard.on('key/delete', () => {});
+function isMouseOverEffect(pointer, effect) {
+  const DO = effect.getDataObject();
+  const width = DO.getWidth();
+  const height = DO.getHeight();
+  const x = effect.sprite.x - width / 2;
+  const y = effect.sprite.y - height / 2;
+  return (
+    pointer.x >= x &&
+    pointer.x <= x + width &&
+    pointer.y >= y &&
+    pointer.y <= y + height
+  );
+}
+
+function addSelectEffectListener(game, phaserGame) {
+  const entityManager = ns.game.entityManager;
+  const effectManager = ns.game.effectManager;
+  const exporter = Exporter.getInstance();
+  const local = EventEmitter.getInstance();
+
+  game.userPointer.on('leftbutton/down', (mousePointer) => {
+    const selector = Selector.getInstance();
+    if (selector.isActive()) return;
+    if (entityManager.entities(':selected').length > 0) return;
+
+    const pointer = mousePointer.getRealCoords();
+    const effects = exporter.getEffects();
+
+    for (let i = effects.length - 1; i >= 0; i -= 1) {
+      const effect = effectManager.getEffectByGUID(effects[i].guid);
+      if (isMouseOverEffect(pointer, effect)) {
+        local.emit(EVENT_EFFECT_SELECTED, effect);
+        local.emit(EVENT_SPACE_OBJECT_SELECTION_CANCELED);
+        return;
+      }
+    }
+
+    local.emit(EVENT_EFFECT_SELECTION_CANCELED);
+  });
+}
+
+function createSelectionSprite(game) {
+  const width = 100;
+  const height = 100;
+  // create a new bitmap data object
+  const bmd = game.add.bitmapData(width, height);
+
+  // draw to the canvas context like normal
+  bmd.ctx.beginPath();
+  bmd.ctx.lineWidth = 5;
+  bmd.ctx.strokeStyle = 'blue';
+  bmd.ctx.rect(0, 0, width, height);
+  bmd.ctx.stroke();
+
+  // use the bitmap data as the texture for the sprite
+  selectionSprite = game.add.sprite(0, 0, bmd);
+  selectionSprite.anchor.setTo(0.5, 0.5);
+  selectionSprite.visible = false;
+}
+
+function addSelectionListeners(game) {
+  const eventEmitter = EventEmitter.getInstance();
+  eventEmitter.on(EVENT_EFFECT_SELECTED, (effect) => {
+    const sprite = effect.sprite;
+    const scaleX = sprite.width / 100;
+    const scaleY = sprite.height / 100;
+
+    selectionSprite.visible = true;
+    selectionSprite.scale.setTo(scaleX, scaleY);
+    effect.sprite.addChild(selectionSprite);
+    selectedEffect = effect;
+  });
+
+  eventEmitter.on(EVENT_EFFECT_SELECTION_CANCELED, () => {
+    selectionSprite.visible = false;
+  });
+}
+
+function addRemoveEffectListener(game, phaserGame) {
+  const eventEmitter = ns.game.eventEmitter;
+  game.userKeyboard.on('key/delete', () => {
+    if (!selectedEffect) return;
+    selectedEffect.sprite.removeChild(selectionSprite);
+    eventEmitter.synced.effects(selectedEffect).remove();
+    Exporter.getInstance().removeEffectByGUID(selectedEffect.getGUID());
+    selectedEffect = null;
+  });
 }
 
 function addRightMouseButtonListener(game) {
@@ -283,8 +393,15 @@ function create(game, EZGUI, phaserGame) {
   EffectsTabs.addEventListeners(game, EZGUI, phaserGame);
   addEventListenersToTabButtons(EZGUI);
   addPlacementListener(game, EZGUI, phaserGame);
-  addRemoveListener(game);
+  addRemoveEffectListener(game);
   addRightMouseButtonListener(game);
+
+  // selection sprite that is added to the selected space objects
+  createSelectionSprite(game);
+
+  // adds listeners to mouse click to select space objects
+  addSelectEffectListener(game, phaserGame);
+  addSelectionListeners(game);
 }
 
 export default {

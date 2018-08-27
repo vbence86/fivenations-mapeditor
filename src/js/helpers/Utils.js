@@ -1,4 +1,6 @@
 /*eslint no-bitwise: [0] */
+import Exporter from './Exporter';
+
 export default {
 
     /**
@@ -214,6 +216,22 @@ export default {
             }
         }
     },
+
+    /**
+     * Resets the current map by removing all the elements
+     * @param {object} game - Phaser.Game instance
+     */
+    resetCurrentMap: function(game) {
+      const exporter = Exporter.getInstance();
+
+      exporter.getEffects()
+        .map(effect => game.effectManager.getEffectByGUID(effect.guid))
+        .forEach(effect => game.effectManager.remove(effect));
+
+      game.entityManager.reset();
+
+      exporter.reset();  
+    },    
 
     // Eventlistener object
     EventDispatcher: (function() {

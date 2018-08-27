@@ -1,7 +1,10 @@
 /* global document, FileReader */
 /* eslint no-param-reassign: 0 */
 import EventEmitter from './EventEmitter';
-import { EVENT_SPACE_OBJECT_SELECTION_CANCELED } from './consts';
+import {
+  EVENT_SPACE_OBJECT_SELECTION_CANCELED,
+  EVENT_EFFECT_SELECTION_CANCELED,
+} from './consts';
 
 let singleton;
 
@@ -55,6 +58,13 @@ class Importer {
   }
 
   /**
+   * Returns all the effects
+   */
+  getEffects() {
+    return this.effects || [];
+  }
+
+  /**
    * Returns all the players
    */
   getPlayers() {
@@ -62,10 +72,21 @@ class Importer {
   }
 
   /**
+   * Resets the importer content
+   */
+  reset() {
+    this.players = undefined;
+    this.entities = undefined;
+    this.effects = undefined;
+    this.spaceObjects = undefined;
+  }
+
+  /**
    * Sets the inner state from the selected json
    * @return {Promise}
    */
   import() {
+    this.reset();
     return loadJSON().then((json) => {
       Object.keys(json).forEach((key) => {
         this[key] = json[key];
@@ -92,10 +113,15 @@ class Importer {
           // if an entity is selected we cancel the starfield selection
           entity.on('select', () => {
             local.emit(EVENT_SPACE_OBJECT_SELECTION_CANCELED);
+            local.emit(EVENT_EFFECT_SELECTION_CANCELED);
           });
           // removes the color indicator inside the mapeditor
           entity.colorIndicator.hide();
         });
+    });
+
+    this.getEffects().forEach((config) => {
+      game.eventEmitter.synced.effects.add(config);
     });
 
     this.getSpaceObjects().forEach((config) => {
@@ -115,6 +141,7 @@ class Importer {
   updateExporter(exporter) {
     exporter.players = this.getPlayers();
     exporter.entities = this.getEntities();
+    exporter.effects = this.getEffects();
     exporter.map = this.getMap();
     exporter.spaceObjects = this.getSpaceObjects();
   }

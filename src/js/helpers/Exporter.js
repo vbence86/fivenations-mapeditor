@@ -108,10 +108,29 @@ class Exporter {
   }
 
   /**
+   * Removes the saved configuration of an effect identified by the given GUID
+   * @param {number} guid
+   */
+  removeEffectByGUID(guid) {
+    if (!this.effects) {
+      return;
+    }
+    for (let i = 0, l = this.effects.length; i < l; i += 1) {
+      if (this.effects[i].guid === guid) {
+        this.effects.splice(i, 1);
+        return;
+      }
+    }
+  }
+
+  /**
    * Removes the saved configuration of the given spaceObject
    * @param {object} spaceObject
    */
   removeSpaceObject(spaceObject) {
+    if (!this.spaceObjects) {
+      return;
+    }
     for (let i = this.spaceObjects.length - 1; i >= 0; i -= 1) {
       if (
         this.spaceObjects[i].x === spaceObject.x &&
@@ -152,6 +171,37 @@ class Exporter {
    */
   download(filename) {
     saveJSON(this.export(), filename || 'map.json');
+  }
+
+  /**
+   * Resets the exporter content
+   */
+  reset() {
+    this.players = undefined;
+    this.entities = undefined;
+    this.effects = undefined;
+    this.spaceObjects = undefined;
+  }
+
+  /**
+   * Returns the array of effects to be exported
+   */
+  getEntities() {
+    return this.entities || [];
+  }
+
+  /**
+   * Returns the array of effects to be exported
+   */
+  getEffects() {
+    return this.effects || [];
+  }
+
+  /**
+   * Returns the array of effects to be exported
+   */
+  getSpaceObjects() {
+    return this.spaceObjects || [];
   }
 }
 

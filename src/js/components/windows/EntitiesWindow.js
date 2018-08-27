@@ -9,6 +9,7 @@ import {
   ENTITY_TAB_ZHOGARN,
   ENTITY_TAB_MISC,
   GUI_PANEL_HEIGHT,
+  EVENT_EFFECT_SELECTION_CANCELED,
   EVENT_SPACE_OBJECT_SELECTION_CANCELED,
 } from '../../helpers/consts';
 import Utils from '../../helpers/Utils';
@@ -314,6 +315,7 @@ function placeEntity(game, config) {
       // if an entity is selected we cancel the starfield selection
       entity.on('select', () => {
         local.emit(EVENT_SPACE_OBJECT_SELECTION_CANCELED);
+        local.emit(EVENT_EFFECT_SELECTION_CANCELED);
       });
       // removes the color indicator inside the mapeditor
       entity.colorIndicator.hide();

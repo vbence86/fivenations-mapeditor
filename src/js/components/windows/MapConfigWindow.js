@@ -289,6 +289,16 @@ function toogleWindow(EZGUI, phaserGame) {
   animating = true;
 }
 
+function createMapConfig() {
+  return {
+    width: mapSizes[selectedMapSizeType - 1].width,
+    height: mapSizes[selectedMapSizeType - 1].height,
+    starfield: {
+      backgroundTile: selectedGalaxyType,
+    },
+  };
+}
+
 function create(game, EZGUI, phaserGame) {
   const eventEmitter = EventEmitter.getInstance();
 
@@ -371,21 +381,18 @@ function create(game, EZGUI, phaserGame) {
       return;
     }
 
-    const config = {
-      width: mapSizes[selectedMapSizeType - 1].width,
-      height: mapSizes[selectedMapSizeType - 1].height,
-      starfield: {
-        backgroundTile: selectedGalaxyType,
-      },
-    };
+    Utils.resetCurrentMap(game);
 
-    Exporter.getInstance().setMap(config);
+    const exporter = Exporter.getInstance();
+    const config = createMapConfig();
+
+    exporter.setMap(config);
 
     game.map.new(config);
+    // Removes Fog of War from the game stage
     game.map.getFogOfWarRenderer().hide();
+    // Removes Fog of War from the Minimap
     Utils.revealMap(game.map);
-
-    game.entityManager.reset();
 
     Selector.getInstance().reset();
   });

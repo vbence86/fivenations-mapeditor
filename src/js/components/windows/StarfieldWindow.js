@@ -4,7 +4,6 @@ import {
   CATEGORY_SPACE_OBJECTS,
   EVENT_SPACE_OBJECT_SELECTED,
   EVENT_SPACE_OBJECT_SELECTION_CANCELED,
-  GUI_PANEL_HEIGHT,
 } from '../../helpers/consts';
 import EventEmitter from '../../helpers/EventEmitter';
 import Selector from '../../helpers/Selector';

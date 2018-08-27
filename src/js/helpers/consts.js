@@ -21,7 +21,10 @@ export const EFFECT_TAB_MISC = 'Misc';
 
 export const EVENT_ON_SELECTOR_RESET = 'onSelectorReset';
 export const EVENT_SPACE_OBJECT_SELECTED = 'onSpaceObjectSelected';
-export const EVENT_SPACE_OBJECT_SELECTION_CANCELLED =
+export const EVENT_SPACE_OBJECT_SELECTION_CANCELED =
   'onSpaceObjectSelectionCancelled';
+
+export const EVENT_EFFECT_SELECTED = 'onEffectSelected';
+export const EVENT_EFFECT_SELECTION_CANCELED = 'onEffectSelectionCancelled';
 
 export const GUI_PANEL_HEIGHT = 222;
