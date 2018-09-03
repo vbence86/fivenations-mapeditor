@@ -29,6 +29,13 @@ class Selector {
   }
 
   /**
+   * @param {number} index of the player to be selected
+   */
+  selectPlayerSettings(idx) {
+    this.currentPlayerSettingsIdx = idx;
+  }
+
+  /**
    * Resets the current selection
    */
   reset() {
@@ -58,6 +65,14 @@ class Selector {
    */
   getSelectedPlayer() {
     return this.selectedPlayerIdx;
+  }
+
+  /**
+   * Returns the selected player settings index
+   * @return {number}
+   */
+  getCurrentPlayerSettingsIdx() {
+    return this.currentPlayerSettingsIdx;
   }
 
   /**

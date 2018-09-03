@@ -250,6 +250,8 @@ function addPlacementListener(game, EZGUI, phaserGame) {
     const z = EZGUI.components.spaceObjectsAttributeZ.value * 0.9 + 0.1;
     const scale = EZGUI.components.spaceObjectsAttributeScale.value + 1;
 
+    if (ns.noInputOverlay) return;
+
     if (coords.x >= placementWindow.width) return;
     if (coords.y >= placementWindow.height) return;
     // minimap

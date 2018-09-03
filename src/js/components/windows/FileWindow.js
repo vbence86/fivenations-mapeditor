@@ -5,6 +5,7 @@ import Exporter from '../../helpers/Exporter';
 import Importer from '../../helpers/Importer';
 import EventEmitter from '../../helpers/EventEmitter';
 import Selector from '../../helpers/Selector';
+import PlayersList from '../elements/PlayersList';
 
 const ns = window.fivenations;
 const gameWidth = ns.window.width;
@@ -129,6 +130,11 @@ function toogleWindow(EZGUI, phaserGame) {
   animating = true;
 }
 
+function toggleActiveButtonById(idx) {
+  const button = EZGUI.components[`playerActiveCheckbox${idx}`];
+  button.checked = true;
+}
+
 function addImportButtonListener(game, EZGUI) {
   EZGUI.components.importMapButton.on('click', () => {
     const importer = Importer.getInstance();
@@ -141,10 +147,8 @@ function addImportButtonListener(game, EZGUI) {
       const players = importer.getPlayers();
       Object.keys(players).forEach((idx) => {
         if (players[idx].active) {
-          EZGUI.components[`playerActiveCheckbox${idx}`].checked = true;
-        }
-        if (players[idx].neutral) {
-          EZGUI.components[`playerNautralCheckbox${idx}`].checked = true;
+          toggleActiveButtonById(idx);
+          PlayersList.toggleSettingsButtonById(idx);
         }
       });
 

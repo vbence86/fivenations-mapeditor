@@ -5,6 +5,7 @@ import FileWindow from './components/windows/FileWindow';
 import MapConfigWindow from './components/windows/MapConfigWindow';
 import StarfieldWindow from './components/windows/StarfieldWindow';
 import PlayersWindow from './components/windows/PlayersWindow';
+import PlayerSettingsWindow from './components/windows/PlayerSettingsWindow';
 import EntitiesWindow from './components/windows/EntitiesWindow';
 import EffectsWindow from './components/windows/EffectsWindow';
 
@@ -34,6 +35,7 @@ installFiveNations().then((game) => {
       PlayersWindow,
       EntitiesWindow,
       EffectsWindow,
+      PlayerSettingsWindow,
     ];
 
     components.forEach((component) => {
@@ -41,5 +43,8 @@ installFiveNations().then((game) => {
     });
 
     overlay.classList.add('hidden');
+
+    // remove all key listeners so as not to get the keydown captures occupied
+    phaserGame.input.keyboard.destroy();
   });
 });

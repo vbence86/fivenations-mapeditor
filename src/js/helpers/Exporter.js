@@ -155,7 +155,10 @@ class Exporter {
     if (!this.players[idx]) {
       this.players[idx] = {};
     }
-    this.players[idx] = config;
+    this.players[idx] = {
+      ...this.players[idx],
+      ...config,
+    };
   }
 
   /**
@@ -202,6 +205,15 @@ class Exporter {
    */
   getSpaceObjects() {
     return this.spaceObjects || [];
+  }
+
+  /**
+   * Returns the player identified by the given id number
+   * @param {number} id - id of the player
+   */
+  getPlayer(id) {
+    if (!this.players) return null;
+    return this.players[id];
   }
 }
 

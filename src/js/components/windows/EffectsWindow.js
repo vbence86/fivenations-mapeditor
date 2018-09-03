@@ -238,6 +238,8 @@ function addPlacementListener(game, EZGUI, phaserGame) {
     const selector = Selector.getInstance();
     const tabWidth = expanded ? width : 0;
 
+    if (ns.noInputOverlay) return;
+
     if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
     if (coords.y - phaserGame.camera.y >= placementWindow.height) return;
     // minimap
