@@ -130,12 +130,8 @@ function toogleWindow(EZGUI, phaserGame) {
   animating = true;
 }
 
-function toggleActiveButtonById(idx) {
-  const button = EZGUI.components[`playerActiveCheckbox${idx}`];
-  button.checked = true;
-}
-
 function addImportButtonListener(game, EZGUI) {
+  const emitter = EventEmitter.getInstance();
   EZGUI.components.importMapButton.on('click', () => {
     const importer = Importer.getInstance();
 
@@ -145,12 +141,7 @@ function addImportButtonListener(game, EZGUI) {
       importer.loadMap(game);
 
       const players = importer.getPlayers();
-      Object.keys(players).forEach((idx) => {
-        if (players[idx].active) {
-          toggleActiveButtonById(idx);
-          PlayersList.toggleSettingsButtonById(idx);
-        }
-      });
+      emitter.emit('onPlayersImported', players);
 
       Utils.revealMap(game.map);
       game.map.getFogOfWarRenderer().hide();

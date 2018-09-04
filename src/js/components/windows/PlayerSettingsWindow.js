@@ -1,5 +1,5 @@
 /* global window, alert */
-import { THEME } from '../../helpers/consts';
+import { THEME, ENTITIES, ENTITY_TAB_MISC } from '../../helpers/consts';
 import Exporter from '../../helpers/Exporter';
 import Selector from '../../helpers/Selector';
 import EventEmitter from '../../helpers/EventEmitter';
@@ -15,6 +15,7 @@ const gameWidth = ns.window.width;
 const gameHeight = ns.window.height;
 const width = 500;
 const height = 600;
+const technologies = {};
 
 const closePlayerSettingsButton = {
   id: 'closePlayerSettingsButton',
@@ -176,6 +177,36 @@ const resourcesLayout = {
   ],
 };
 
+const allowedEntitiesHeader = {
+  id: 'allowedEntitiesHeader',
+  text: 'Allowed Technologies',
+  font: {
+    size: '20px',
+    family: 'Arial',
+  },
+  component: 'Label',
+  position: {
+    x: 0,
+    y: 0,
+  },
+  width,
+  height: 30,
+};
+
+const allowedEntitiesLayout = {
+  id: 'allowedEntitiesLayout',
+  component: 'List',
+  padding: 3,
+  position: {
+    x: 0,
+    y: 0,
+  },
+  width: width - 15,
+  height: 150,
+  layout: [1, 1],
+  children: [createTechnologyLayoutDefinition()],
+};
+
 const playerSettingsWindow = {
   id: 'playerSettingsWindow',
   component: 'Window',
@@ -205,14 +236,56 @@ const playerSettingsWindow = {
     playerResourcesHeader,
     resourcesLayout,
     null,
-    null,
-    null,
+    allowedEntitiesHeader,
+    allowedEntitiesLayout,
     null,
     null,
     null,
     null,
   ],
 };
+
+function createTechnologyCheckboxDefinition(id) {
+  return {
+    text: ` ${id}`,
+    font: {
+      size: '11px',
+      family: 'Arial',
+    },
+    component: 'Checkbox',
+    position: 'center',
+    width: 30,
+    height: 30,
+    id: `technologyCheckbox_${id}`,
+  };
+}
+
+function createTechnologyLayoutDefinition() {
+  const techList = getTechnologies();
+  const columnPerRow = 3;
+  const rows = Math.ceil(techList.length / columnPerRow);
+  return {
+    component: 'Layout',
+    padding: 3,
+    draggable: true,
+    dragX: false,
+    position: 'top left',
+    width,
+    height: 30 * rows,
+    layout: [columnPerRow, rows],
+    children: techList.map(entity =>
+      createTechnologyCheckboxDefinition(entity)),
+  };
+}
+
+function getTechnologies() {
+  return Object.keys(ENTITIES)
+    .filter(category => category !== ENTITY_TAB_MISC)
+    .reduce(
+      (array, category) => (array = [...array, ...ENTITIES[category]]),
+      [],
+    );
+}
 
 function openWindow(EZGUI, idx) {
   const w = EZGUI.components.playerSettingsWindow;
@@ -249,6 +322,12 @@ function updateWindowComponents(idx) {
   playerResourcesSilicium.text = player.silicium || 0;
   playerResourcesUranium.text = player.uranium || 0;
   playerResourcesEnergy.text = player.energy || 0;
+
+  technologies[idx] = player.technologies || {};
+  getTechnologies().forEach((id) => {
+    const checkbox = EZGUI.components[`technologyCheckbox_${id}`];
+    checkbox.checked = !!technologies[idx][id];
+  });
 }
 
 function addResourceIcon(config) {
@@ -259,6 +338,21 @@ function addResourceIcon(config) {
   icon.frameName = frameName;
   icon.x -= icon.width / 2;
   icon.y += icon.height / 2;
+
+  parent.addChild(icon);
+}
+
+function addTechnologyIcon(config) {
+  const { game } = ns.game;
+  const { parent, id } = config;
+  const icon = game.add.sprite(0, 0, id);
+  const scaleFactor = 30 / 51;
+  icon.anchor.set(0.5);
+  icon.frame = 2;
+
+  icon.x -= icon.width * scaleFactor / 2;
+  icon.y += icon.height * scaleFactor / 2;
+  icon.scale.setTo(scaleFactor);
 
   parent.addChild(icon);
 }
@@ -342,6 +436,30 @@ function create(game, EZGUI, phaserGame) {
         energy: playerResourcesEnergy.text,
       });
     };
+  });
+
+  // -----------------------------------------------------------
+  // Player Technologies
+  // -----------------------------------------------------------
+  const techList = getTechnologies();
+  techList.forEach((id) => {
+    const checkbox = EZGUI.components[`technologyCheckbox_${id}`];
+    checkbox.x -= 38;
+    addTechnologyIcon({ parent: checkbox, id });
+
+    checkbox.on('click', () => {
+      const playerIdx = selector.getCurrentPlayerSettingsIdx();
+
+      if (!technologies[playerIdx]) {
+        technologies[playerIdx] = {};
+      }
+      technologies[playerIdx][id] = checkbox.checked;
+
+      Exporter.getInstance().setPlayer({
+        idx: playerIdx,
+        technologies: technologies[playerIdx],
+      });
+    });
   });
 
   closeWindow(EZGUI);

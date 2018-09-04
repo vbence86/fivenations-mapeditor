@@ -280,6 +280,10 @@ function addSelectEffectListener(game, phaserGame) {
     if (selector.isActive()) return;
     if (entityManager.entities(':selected').length > 0) return;
 
+    // selection functionality must be disabled if there is an
+    // overlay window above the game stage
+    if (ns.noInputOverlay) return;
+
     const pointer = mousePointer.getRealCoords();
     const effects = exporter.getEffects();
 

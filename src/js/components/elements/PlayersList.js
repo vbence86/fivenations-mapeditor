@@ -96,19 +96,38 @@ function getGUIDefinition() {
   };
 }
 
+function enableButton(button) {
+  button.disabled = false;
+  button.alpha = 1;
+}
+
+function disableButton(button) {
+  button.disabled = true;
+  button.alpha = 0.25;
+}
+
 function toggleButton(button) {
   if (button.disabled) {
-    button.disabled = false;
-    button.alpha = 1;
+    enableButton(button);
   } else {
-    button.disabled = true;
-    button.alpha = 0.25;
+    disableButton(button);
   }
 }
 
-function toggleSettingsButtonById(id) {
-  const button = EZGUI.components[`playerSettingsButton${id}`];
-  toggleButton(button);
+function activatePlayer(id) {
+  const activeButton = EZGUI.components[`playerActiveCheckbox${id}`];
+  const settingsButton = EZGUI.components[`playerSettingsButton${id}`];
+
+  activeButton.checked = true;
+  enableButton(settingsButton);
+}
+
+function deactivePlayer(id) {
+  const activeButton = EZGUI.components[`playerActiveCheckbox${id}`];
+  const settingsButton = EZGUI.components[`playerSettingsButton${id}`];
+
+  activeButton.checked = false;
+  disableButton(settingsButton);
 }
 
 function addButtonListeners(game, EZGUI, phaserGame) {
@@ -119,7 +138,7 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     // refines coordinates
     settingsButton.x -= 10;
     settingsButton.y -= 4;
-    toggleButton(settingsButton);
+    disableButton(settingsButton);
     settingsButton.on('click', () => {
       if (settingsButton.disabled) return;
       Selector.getInstance().selectPlayerSettings(i);
@@ -152,12 +171,25 @@ function addButtonListeners(game, EZGUI, phaserGame) {
   }
 }
 
+function addImportListeners(game, EZGUI, phaserGame) {
+  const eventEmitter = EventEmitter.getInstance();
+  eventEmitter.on('onPlayersImported', (players) => {
+    for (let i = 1, l = PLAYERS_COUNT; i <= l; i += 1) {
+      if (players[i] && players[i].active) {
+        activatePlayer(i);
+      } else {
+        deactivePlayer(i);
+      }
+    }
+  });
+}
+
 function addEventListeners(game, EZGUI, phaserGame) {
   addButtonListeners(game, EZGUI, phaserGame);
+  addImportListeners(game, EZGUI, phaserGame);
 }
 
 export default {
   addEventListeners,
-  toggleSettingsButtonById,
   getGUIDefinition,
 };
