@@ -28,7 +28,16 @@ export const EVENT_SPACE_OBJECT_SELECTION_CANCELED =
 export const EVENT_EFFECT_SELECTED = 'onEffectSelected';
 export const EVENT_EFFECT_SELECTION_CANCELED = 'onEffectSelectionCancelled';
 
-export const GUI_PANEL_HEIGHT = 222;
+export const PLAYER_MANAGER_COLORS = [
+  '0x08A2EA',
+  '0x10B308',
+  '0xF28209',
+  '0xBA10D9',
+  '0xD40F0F',
+  '0xF8F8F9',
+  '0xE5C410',
+  '0x65615D',
+];
 
 export const ENTITIES = {
   [ENTITY_TAB_FEDERATION]: [

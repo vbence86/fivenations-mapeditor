@@ -8,7 +8,6 @@ import {
   ENTITY_TAB_THORUN,
   ENTITY_TAB_ZHOGARN,
   ENTITY_TAB_MISC,
-  GUI_PANEL_HEIGHT,
   EVENT_EFFECT_SELECTION_CANCELED,
   EVENT_SPACE_OBJECT_SELECTION_CANCELED,
 } from '../../helpers/consts';
@@ -337,7 +336,12 @@ function addPlacementListener(game, EZGUI, phaserGame) {
     if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
     if (coords.y - phaserGame.camera.y >= placementWindow.height) return;
     // minimap
-    if (coords.x <= 182 && coords.y > placementWindow.height - 178) return;
+    if (
+      coords.x - phaserGame.camera.x <= 182 &&
+      coords.y - phaserGame.camera.y > placementWindow.height - 178
+    ) {
+      return;
+    }
     if (!selector.isActive()) return;
     if (selector.getCategory() !== CATEGORY_ENTITIES) return;
     if (!selector.getSelectedPlayer()) {

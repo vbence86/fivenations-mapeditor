@@ -2,7 +2,8 @@
 import Selector from '../../helpers/Selector';
 import Exporter from '../../helpers/Exporter';
 import EventEmitter from '../../helpers/EventEmitter';
-import { PLAYERS_COUNT } from '../../helpers/consts';
+import { PLAYERS_COUNT, PLAYER_MANAGER_COLORS } from '../../helpers/consts';
+import StartLocationManager from '../../helpers/StartLocationManager';
 
 const ns = window.fivenations;
 const width = 400;
@@ -128,6 +129,9 @@ function deactivePlayer(id) {
 
   activeButton.checked = false;
   disableButton(settingsButton);
+
+  const manager = StartLocationManager.getInstance();
+  manager.delete(id);
 }
 
 function addButtonListeners(game, EZGUI, phaserGame) {
@@ -168,6 +172,10 @@ function addButtonListeners(game, EZGUI, phaserGame) {
         });
       });
     });
+
+    // colorize labels
+    const label = EZGUI.components[`playerIdLabel${i}`];
+    label.textObj.addColor(PLAYER_MANAGER_COLORS[i - 1], 0);
   }
 }
 

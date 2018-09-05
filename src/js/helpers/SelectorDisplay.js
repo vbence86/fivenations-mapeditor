@@ -1,10 +1,16 @@
 /* global window, Phaser */
 import EventEmitter from './EventEmitter';
-import { EVENT_ON_SELECTOR_SELECT, EVENT_ON_SELECTOR_RESET } from './consts';
+import {
+  EVENT_ON_SELECTOR_SELECT,
+  EVENT_ON_SELECTOR_RESET,
+  CATEGORY_PLAYER_START_LOCATION,
+} from './consts';
 
 let singleton;
 
 const ns = window.fivenations;
+
+const excludedCategories = [CATEGORY_PLAYER_START_LOCATION];
 
 /**
  * Returns the id of the frame that should be displayed when the
@@ -50,7 +56,7 @@ class SelectorDisplay extends Phaser.Group {
    * @param {object} selection - { id: string, category: string }
    */
   activate(selection) {
-    const { id } = selection;
+    const { id, category } = selection;
     if (!id) return;
 
     if (this.sprite) {
@@ -59,7 +65,7 @@ class SelectorDisplay extends Phaser.Group {
     }
 
     // if BDP is activated we don't need the SelectorDisplay
-    if (!ns.BPDActivated) {
+    if (!ns.BPDActivated && excludedCategories.indexOf(category) === -1) {
       this.createSpriteById(id);
       this.addEventListeners();
       this.show();

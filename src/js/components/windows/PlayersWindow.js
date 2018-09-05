@@ -1,5 +1,5 @@
 /* global window, alert */
-import { THEME } from '../../helpers/consts';
+import { THEME, CATEGORY_PLAYER_START_LOCATION } from '../../helpers/consts';
 import Exporter from '../../helpers/Exporter';
 import PlayersList from '../elements/PlayersList';
 import EventEmitter from '../../helpers/EventEmitter';
@@ -120,6 +120,42 @@ function toogleWindow(EZGUI, phaserGame) {
   });
   expanded = !expanded;
   animating = true;
+}
+
+function addStartLocationPlacementListener(game, EZGUI, phaserGame) {
+  game.userPointer.on('leftbutton/down', (mousePointer) => {
+    const coords = mousePointer.getRealCoords();
+    const selector = Selector.getInstance();
+
+    if (ns.noInputOverlay) return;
+
+    if (coords.x - phaserGame.camera.x >= placementWindow.width) return;
+    if (coords.y - phaserGame.camera.y >= placementWindow.height) return;
+    // minimap
+    if (coords.x <= 182 && coords.y > placementWindow.height - 178) return;
+    if (!selector.isActive()) return;
+    if (selector.getCategory() !== CATEGORY_PLAYER_START_LOCATION) return;
+
+    placeStartLocation({
+      id: selector.getId(),
+      x: coords.x,
+      y: coords.y,
+    });
+  });
+}
+
+function placeStartLocation(config) {
+  const manager = StartLocationManager.getInstance();
+  const { id, x, y } = config;
+  const coords = { x, y };
+  manager.place(id, coords);
+
+  Exporter.getInstance().setPlayer({
+    idx: id,
+    startLocation: coords,
+  });
+
+  Selector.getInstance().reset();
 }
 
 function create(game, EZGUI, phaserGame) {
