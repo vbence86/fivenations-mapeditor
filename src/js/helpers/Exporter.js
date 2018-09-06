@@ -81,6 +81,22 @@ class Exporter {
   }
 
   /**
+   * Updates the entity identified by the given guid with the given
+   * additional config attributes
+   * @param {string} guid - GUID string
+   * @param {object} config
+   */
+  updateEntityByGUID(guid, config) {
+    this.entities.forEach((data, idx) => {
+      if (data.guid !== guid) return;
+      this.entities[idx] = {
+        ...data,
+        ...config,
+      };
+    });
+  }
+
+  /**
    * Saves the config object used to add an Effect to the world
    * @param {object} config - Contains all required information about the Effect
    */

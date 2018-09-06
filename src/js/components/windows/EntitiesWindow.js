@@ -389,6 +389,28 @@ function addRightMouseButtonListener(game) {
   });
 }
 
+function addSetHeaderListener(game) {
+  game.userPointer.on('rightbutton/down', (mousePointer) => {
+    if (ns.noInputOverlay) return;
+
+    const coords = mousePointer.getRealCoords();
+    
+    const entityManager = game.entityManager;
+    const entities = entityManager.entities(':selected');
+    
+    if (entities.length) {
+      entities.forEach(entity => {
+        Exporter
+          .getInstance()
+          .updateEntityByGUID(entity.getGUID(), {
+            headToCoords: coords,
+          });
+        entity.headToCoords(coords)
+      });
+    }
+  });
+}
+
 function create(game, EZGUI, phaserGame) {
   const eventEmitter = EventEmitter.getInstance();
 
@@ -437,6 +459,7 @@ function create(game, EZGUI, phaserGame) {
   addPlacementListener(game, EZGUI, phaserGame);
   addRemoveListener(game);
   addRightMouseButtonListener(game);
+  addSetHeaderListener(game);
 }
 
 export default {
