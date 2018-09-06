@@ -3,7 +3,7 @@
   "description": "",
   "readme": "",
   "repository": "",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "dependencies": {
     "ansi-regex": "^3.0.0",
     "event-emitter": "^0.3.5",
