@@ -80,7 +80,7 @@ class Selector {
    * @return {boolean}
    */
   isActive() {
-    return !!this.id;
+    return this.id !== undefined && this.id !== null;
   }
 }
 

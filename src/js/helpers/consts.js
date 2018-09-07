@@ -7,6 +7,7 @@ export const CATEGORY_SPACE_OBJECTS = 'spaceObjects';
 export const CATEGORY_ENTITIES = 'entities';
 export const CATEGORY_EFFECTS = 'effects';
 export const CATEGORY_PLAYER_START_LOCATION = 'playerStarLocations';
+export const CATEGORY_LOCATION = 'locations';
 
 export const PLAYERS_COUNT = 8;
 
@@ -21,12 +22,16 @@ export const EFFECT_TAB_MISC = 'Misc';
 
 export const EVENT_ON_SELECTOR_SELECT = 'onSelectorSelect';
 export const EVENT_ON_SELECTOR_RESET = 'onSelectorReset';
+export const EVENT_ENTITY_SELECTION_CANCELED = 'onEntitySelectionCancelled';
 export const EVENT_SPACE_OBJECT_SELECTED = 'onSpaceObjectSelected';
 export const EVENT_SPACE_OBJECT_SELECTION_CANCELED =
   'onSpaceObjectSelectionCancelled';
 
 export const EVENT_EFFECT_SELECTED = 'onEffectSelected';
 export const EVENT_EFFECT_SELECTION_CANCELED = 'onEffectSelectionCancelled';
+
+export const EVENT_LOCATION_SELECTED = 'onLocationSelected';
+export const EVENT_LOCATION_SELECTION_CANCELED = 'onLocationSelectionCancelled';
 
 export const PLAYER_MANAGER_COLORS = [
   '0x08A2EA',

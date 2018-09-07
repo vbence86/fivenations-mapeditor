@@ -8,6 +8,7 @@ const app = new FiveNations({ canvasElmId });
 const scriptBox = FiveNations.Scriptbox.getInstance();
 
 ns.mapEditorMode = true;
+ns.editor = true;
 
 /**
  * Appends the SelectorDisplay component to the GUI graphics group

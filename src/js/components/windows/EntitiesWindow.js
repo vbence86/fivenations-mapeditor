@@ -10,6 +10,7 @@ import {
   ENTITY_TAB_MISC,
   EVENT_EFFECT_SELECTION_CANCELED,
   EVENT_SPACE_OBJECT_SELECTION_CANCELED,
+  EVENT_ENTITY_SELECTION_CANCELED,
 } from '../../helpers/consts';
 import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
@@ -394,20 +395,26 @@ function addSetHeaderListener(game) {
     if (ns.noInputOverlay) return;
 
     const coords = mousePointer.getRealCoords();
-    
+
     const entityManager = game.entityManager;
     const entities = entityManager.entities(':selected');
-    
+
     if (entities.length) {
-      entities.forEach(entity => {
-        Exporter
-          .getInstance()
-          .updateEntityByGUID(entity.getGUID(), {
-            headToCoords: coords,
-          });
-        entity.headToCoords(coords)
+      entities.forEach((entity) => {
+        Exporter.getInstance().updateEntityByGUID(entity.getGUID(), {
+          headToCoords: coords,
+        });
+        entity.headToCoords(coords);
       });
     }
+  });
+}
+
+function addSelectionListener(game) {
+  const eventEmitter = EventEmitter.getInstance();
+  const entityManager = game.entityManager;
+  eventEmitter.on(EVENT_ENTITY_SELECTION_CANCELED, () => {
+    entityManager.entities().forEach(entity => entity.unselect());
   });
 }
 
@@ -456,6 +463,7 @@ function create(game, EZGUI, phaserGame) {
 
   EntitiesTabs.addEventListeners(game, EZGUI, phaserGame);
   addEventListenersToTabButtons(EZGUI);
+  addSelectionListener(game);
   addPlacementListener(game, EZGUI, phaserGame);
   addRemoveListener(game);
   addRightMouseButtonListener(game);

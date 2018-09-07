@@ -9,6 +9,7 @@ import PlayersWindow from './components/windows/PlayersWindow';
 import PlayerSettingsWindow from './components/windows/PlayerSettingsWindow';
 import EntitiesWindow from './components/windows/EntitiesWindow';
 import EffectsWindow from './components/windows/EffectsWindow';
+import LocationsWindow from './components/windows/LocationsWindow';
 
 const urlPrefix = window.location;
 const EZGUIPublicUrl = 'resources/EZGUI/';
@@ -77,14 +78,12 @@ function installEZGUI(game) {
         EntitiesWindow,
         EffectsWindow,
         PlayerSettingsWindow,
+        LocationsWindow,
       ];
 
       components.forEach((component) => {
         component.create(game, EZGUI, phaserGame);
       });
-
-      // remove all key listeners so as not to get the keydown captures occupied
-      phaserGame.input.keyboard.destroy();
 
       resolve(game);
     });

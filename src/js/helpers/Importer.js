@@ -1,6 +1,7 @@
 /* global document, FileReader */
 /* eslint no-param-reassign: 0 */
 import EventEmitter from './EventEmitter';
+import LocationManager from './LocationManager';
 import {
   EVENT_SPACE_OBJECT_SELECTION_CANCELED,
   EVENT_EFFECT_SELECTION_CANCELED,
@@ -72,6 +73,13 @@ class Importer {
   }
 
   /**
+   * Returns all locations
+   */
+  getLocations() {
+    return this.locations || [];
+  }
+
+  /**
    * Resets the importer content
    */
   reset() {
@@ -79,6 +87,7 @@ class Importer {
     this.entities = undefined;
     this.effects = undefined;
     this.spaceObjects = undefined;
+    this.locations = undefined;
   }
 
   /**
@@ -101,8 +110,10 @@ class Importer {
   loadMap(game) {
     const local = EventEmitter.getInstance();
     const mapConfig = this.getMap();
+    const locationManager = LocationManager.getInstance();
     game.map.new(mapConfig);
 
+    // @TODO remove this - it has been redundant
     game.entityManager.reset();
 
     this.getEntities().forEach((config) => {
@@ -129,6 +140,10 @@ class Importer {
         .getStarfield()
         .getDeepSpaceLayer()
         .add(config);
+    });
+
+    this.getLocations().forEach((config) => {
+      locationManager.add(config);
     });
   }
 

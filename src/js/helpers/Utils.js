@@ -1,6 +1,7 @@
 /*eslint no-bitwise: [0] */
 import Exporter from './Exporter';
 import StartLocationManager from './StartLocationManager';
+import LocationManager from './LocationManager';
 
 export default {
 
@@ -225,6 +226,7 @@ export default {
     resetCurrentMap: function(game) {
       const exporter = Exporter.getInstance();
       const startLocationManager = StartLocationManager.getInstance();
+      const locationManager = LocationManager.getInstance();
 
       exporter.getEffects()
         .map(effect => game.effectManager.getEffectByGUID(effect.guid))
@@ -233,6 +235,8 @@ export default {
       game.entityManager.reset();
 
       startLocationManager.reset();
+
+      locationManager.reset();
 
       exporter.reset();  
     },    

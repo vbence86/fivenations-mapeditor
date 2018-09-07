@@ -108,6 +108,23 @@ class Exporter {
   }
 
   /**
+   * Saves the config object used to add a Location to the world
+   * @param {object} config - Contains all required information about the Location
+   */
+  addLocation(config) {
+    if (!this.locations) {
+      this.locations = [];
+    }
+    this.locations.push({
+      id: config.id,
+      x: config.x,
+      y: config.y,
+      width: config.width,
+      height: config.height,
+    });
+  }
+
+  /**
    * Removes the saved configuration of an entity identified by the given GUID
    * @param {number} guid
    */
@@ -160,6 +177,22 @@ class Exporter {
   }
 
   /**
+   * Removes the saved configuration of a location
+   * @param {object} location - Location instance
+   */
+  removeLocation(location) {
+    if (!this.locations) {
+      return;
+    }
+    for (let i = 0, l = this.locations.length; i < l; i += 1) {
+      if (this.locations[i] === location) {
+        this.locations.splice(i, 1);
+        return;
+      }
+    }
+  }
+
+  /**
    * Creates or Overwrites the given player attributes by the idx attr
    * @param {object} player attributes
    */
@@ -200,10 +233,12 @@ class Exporter {
     this.entities = undefined;
     this.effects = undefined;
     this.spaceObjects = undefined;
+    this.locations = undefined;
   }
 
   /**
-   * Returns the array of effects to be exported
+   * Returns the array of entities to be exported
+   * @return {object} array
    */
   getEntities() {
     return this.entities || [];
@@ -211,16 +246,26 @@ class Exporter {
 
   /**
    * Returns the array of effects to be exported
+   * @return {object} array
    */
   getEffects() {
     return this.effects || [];
   }
 
   /**
-   * Returns the array of effects to be exported
+   * Returns the array of space objects to be exported
+   * @return {object} array
    */
   getSpaceObjects() {
     return this.spaceObjects || [];
+  }
+
+  /**
+   * Returns the array of locations to be exported
+   * @return {object} array
+   */
+  getLocations() {
+    return this.locations;
   }
 
   /**
