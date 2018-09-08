@@ -175,7 +175,9 @@ function addButtonListeners(game, EZGUI, phaserGame) {
 
     // colorize labels
     const label = EZGUI.components[`playerIdLabel${i}`];
-    label.textObj.addColor(PLAYER_MANAGER_COLORS[i - 1], 0);
+    const color = PLAYER_MANAGER_COLORS[i - 1].replace('0x', '#');
+    label.textObj.addColor(color, 0);
+    label.textObj.setShadow(1, 1, 'rgba(0,0,0,0.5)', 3);
   }
 }
 

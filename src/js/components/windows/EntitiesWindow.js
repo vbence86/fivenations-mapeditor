@@ -414,7 +414,9 @@ function addSelectionListener(game) {
   const eventEmitter = EventEmitter.getInstance();
   const entityManager = game.entityManager;
   eventEmitter.on(EVENT_ENTITY_SELECTION_CANCELED, () => {
-    entityManager.entities().forEach(entity => entity.unselect());
+    setTimeout(() => {
+      entityManager.entities().forEach(entity => entity.unselect());
+    }, 0);
   });
 }
 

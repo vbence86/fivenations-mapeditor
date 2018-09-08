@@ -185,7 +185,7 @@ class Exporter {
       return;
     }
     for (let i = 0, l = this.locations.length; i < l; i += 1) {
-      if (this.locations[i] === location) {
+      if (this.locations[i].id === location.getId()) {
         this.locations.splice(i, 1);
         return;
       }

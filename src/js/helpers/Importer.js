@@ -145,6 +145,7 @@ class Importer {
     this.getLocations().forEach((config) => {
       locationManager.add(config);
     });
+    locationManager.hideAll();
   }
 
   /**
@@ -159,6 +160,7 @@ class Importer {
     exporter.effects = this.getEffects();
     exporter.map = this.getMap();
     exporter.spaceObjects = this.getSpaceObjects();
+    exporter.locations = this.getLocations();
   }
 }
 

@@ -199,7 +199,7 @@ function addSelectLocationListener(game, phaserGame) {
     const selector = Selector.getInstance();
     const manager = LocationManager.getInstance();
 
-    if (!locationsWindow.visible) return;
+    if (!expanded) return;
 
     // selection functionality must be disabled if there is an
     // overlay window above the game stage
