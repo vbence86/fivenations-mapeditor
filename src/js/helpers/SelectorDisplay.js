@@ -21,11 +21,17 @@ const excludedCategories = [CATEGORY_PLAYER_START_LOCATION];
  */
 function getDisplayFrame(id) {
   const data = ns.game.cache.getJSON(id);
+  const animationOffset = data.animationOffset || 0;
   if (data.frames && data.frames.length) return data.frames[0];
   if (data.customFrame !== undefined) return data.customFrame;
   if (data.animations && data.animations['idle-forever']) {
     if (data.animations['idle-forever'].frames.length === 1) {
-      return data.animations['idle-forever'].frames[0];
+      return data.animations['idle-forever'].frames[0] + animationOffset;
+    }
+  }
+  if (data.animations && data.animations.idle) {
+    if (data.animations.idle.frames.length) {
+      return data.animations.idle.frames[0] + animationOffset;
     }
   }
   return 3;
