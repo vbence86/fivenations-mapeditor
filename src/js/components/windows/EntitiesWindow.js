@@ -317,8 +317,6 @@ function placeEntity(game, config) {
         local.emit(EVENT_SPACE_OBJECT_SELECTION_CANCELED);
         local.emit(EVENT_EFFECT_SELECTION_CANCELED);
       });
-      // removes the color indicator inside the mapeditor
-      entity.colorIndicator.hide();
     });
 
   Exporter.getInstance().addEntity(extendedConfig);

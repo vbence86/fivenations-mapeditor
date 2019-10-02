@@ -92,7 +92,7 @@ export const ENTITIES = {
     'piratehurricane',
     'pirateorca',
     'piratepiratevessel',
-    'pirateicarus',
+    'piratecargo',
   ],
   [ENTITY_TAB_ATHRAEL]: [
     'intruder',

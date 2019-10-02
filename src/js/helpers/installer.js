@@ -4,9 +4,17 @@ import SelectorDisplay from './SelectorDisplay';
 
 const ns = window.fivenations;
 const canvasElmId = 'fivenations-game';
-const app = new FiveNations({ canvasElmId });
+
+const app = new FiveNations({
+  skipScenes: true,
+  canvasElmId,
+});
+
 const scriptBox = FiveNations.Scriptbox.getInstance();
 
+ns.debug = {};
+ns.debug.grid = true;
+ns.debug.noMusic = true;
 ns.mapEditorMode = true;
 window.editor = true;
 

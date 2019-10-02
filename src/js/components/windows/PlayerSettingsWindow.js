@@ -390,8 +390,8 @@ function addTechnologyIcon(config) {
   icon.anchor.set(0.5);
   icon.frame = 2;
 
-  icon.x -= icon.width * scaleFactor / 2;
-  icon.y += icon.height * scaleFactor / 2;
+  icon.x -= (icon.width * scaleFactor) / 2;
+  icon.y += (icon.height * scaleFactor) / 2;
   icon.scale.setTo(scaleFactor);
 
   parent.addChild(icon);

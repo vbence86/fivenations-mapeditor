@@ -122,6 +122,7 @@ function addButtonListeners(game, EZGUI, phaserGame) {
 
     button.addChild(clone);
     button.on('click', () => {
+      const selector = Selector.getInstance();
       // attaches selector sprite to the button
       selection.visible = true;
       button.addChild(selection);
@@ -131,13 +132,19 @@ function addButtonListeners(game, EZGUI, phaserGame) {
       ns.BPDActivated = false;
 
       if (DO.building && excludedFromBPD.indexOf(id) === -1) {
-        BPD.activate(id);
-        BPD.canBeBuiltAnywhere = true;
-        ns.BPDActivated = true;
+        const playerManager = fivenations.game.playerManager;
+        const player = playerManager
+          .getPlayers()
+          .find(player => player.getTeam() === selector.getSelectedPlayer());
+        if (player) {
+          BPD.activate(id, player);
+          BPD.canBeBuiltAnywhere = true;
+          ns.BPDActivated = true;
+        }
       }
 
       // updates the current selection
-      Selector.getInstance().select({
+      selector.select({
         category: CATEGORY_ENTITIES,
         id,
       });

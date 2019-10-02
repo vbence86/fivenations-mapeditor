@@ -93,6 +93,7 @@ function installEZGUI(game) {
 // main entry point to the mapeditor application
 installFiveNations()
   .then((game) => {
+    game.fadeIn();
     showPreloadOverlay();
     return game;
   })
