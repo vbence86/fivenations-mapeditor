@@ -175,32 +175,33 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     selection.visible = false;
   });
 
-  mergeAllEntities().forEach((id) => {
-    const button = EZGUI.components[id];
-    if (!button) return;
+  mergeAllEntities().forEach(id =>
+    setTimeout(() => {
+      const button = EZGUI.components[id];
+      if (!button) return;
 
-    const spriteObj = phaserGame.make.sprite(0, 0, id);
-    const DO = phaserGame.cache.getJSON(id);
-    spriteObj.frame = getDisplayFrame(DO);
+      const spriteObj = phaserGame.make.sprite(0, 0, id);
+      const DO = phaserGame.cache.getJSON(id);
+      spriteObj.frame = getDisplayFrame(DO);
 
-    const clone = phaserGame.make.sprite(0, 0, spriteObj.generateTexture());
-    const scale = button.width / clone.width;
+      const clone = phaserGame.make.sprite(0, 0, spriteObj.generateTexture());
+      const scale = button.width / clone.width;
 
-    clone.scale.setTo(scale, scale);
-    clone.inputEnabled = true;
+      clone.scale.setTo(scale, scale);
+      clone.inputEnabled = true;
 
-    button.addChild(clone);
-    button.on('click', () => {
-      // attaches selector sprite to the button
-      selection.visible = true;
-      button.addChild(selection);
-      // updates the current selection
-      Selector.getInstance().select({
-        category: CATEGORY_EFFECTS,
-        id,
+      button.addChild(clone);
+      button.on('click', () => {
+        // attaches selector sprite to the button
+        selection.visible = true;
+        button.addChild(selection);
+        // updates the current selection
+        Selector.getInstance().select({
+          category: CATEGORY_EFFECTS,
+          id,
+        });
       });
-    });
-  });
+    }));
 }
 
 function mergeAllEntities() {
