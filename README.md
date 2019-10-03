@@ -2,9 +2,13 @@
 Five Nations Map Editor is an external tool that is made to design and construct maps that can be loaded in Five Nations.
 
 ## Install
-Clone the project to a folder of your choice
+Clone the project to a folder of your choice through SSH
 ```
 git clone git@github.com:vbence86/fivenations-mapeditor.git
+```
+or through HTTPS
+```
+git clone https://github.com/vbence86/fivenations-mapeditor.git
 ```
 
 Install the project dependencies
