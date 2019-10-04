@@ -52,7 +52,7 @@
   },
   "scripts": {
     "build": "npm run lint && node ./scripts/build",
-    "dev": "npm run lint && node ./scripts/dev",
+    "dev": "node ./scripts/dev",
     "lint": "eslint src/js/**/*.js",
     "format": "prettier-eslint --write src/js/**/*.js",
     "precommit": "lint-staged",

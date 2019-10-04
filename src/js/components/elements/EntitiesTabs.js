@@ -102,54 +102,55 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     selection.visible = false;
   });
 
-  mergeAllEntities().forEach((id) => {
-    const button = EZGUI.components[id];
-    if (!button) return;
+  mergeAllEntities().forEach(id =>
+    setTimeout(() => {
+      const button = EZGUI.components[id];
+      if (!button) return;
 
-    const spriteObj = phaserGame.make.sprite(0, 0, id);
-    const DO = phaserGame.cache.getJSON(id);
-    spriteObj.frame = DO.customFrame || 1;
+      const spriteObj = phaserGame.make.sprite(0, 0, id);
+      const DO = phaserGame.cache.getJSON(id);
+      spriteObj.frame = DO.customFrame || 1;
 
-    if (ENTITIES[ENTITY_TAB_MISC].indexOf(id) !== -1) {
-      spriteObj.frame = getDisplayFrame(DO);
-    }
-
-    const clone = phaserGame.make.sprite(0, 0, spriteObj.generateTexture());
-    const scale = button.width / clone.width;
-
-    clone.scale.setTo(scale, scale);
-    clone.inputEnabled = true;
-
-    button.addChild(clone);
-    button.on('click', () => {
-      const selector = Selector.getInstance();
-      // attaches selector sprite to the button
-      selection.visible = true;
-      button.addChild(selection);
-      // activates the BuildingPlacementDisplay
-      const BPD = ns.game.GUI.getBuildingPlacementDisplay();
-      BPD.deactivate();
-      ns.BPDActivated = false;
-
-      if (DO.building && excludedFromBPD.indexOf(id) === -1) {
-        const playerManager = fivenations.game.playerManager;
-        const player = playerManager
-          .getPlayers()
-          .find(player => player.getTeam() === selector.getSelectedPlayer());
-        if (player) {
-          BPD.activate(id, player);
-          BPD.canBeBuiltAnywhere = true;
-          ns.BPDActivated = true;
-        }
+      if (ENTITIES[ENTITY_TAB_MISC].indexOf(id) !== -1) {
+        spriteObj.frame = getDisplayFrame(DO);
       }
 
-      // updates the current selection
-      selector.select({
-        category: CATEGORY_ENTITIES,
-        id,
+      const clone = phaserGame.make.sprite(0, 0, spriteObj.generateTexture());
+      const scale = button.width / clone.width;
+
+      clone.scale.setTo(scale, scale);
+      clone.inputEnabled = true;
+
+      button.addChild(clone);
+      button.on('click', () => {
+        const selector = Selector.getInstance();
+        // attaches selector sprite to the button
+        selection.visible = true;
+        button.addChild(selection);
+        // activates the BuildingPlacementDisplay
+        const BPD = ns.game.GUI.getBuildingPlacementDisplay();
+        BPD.deactivate();
+        ns.BPDActivated = false;
+
+        if (DO.building && excludedFromBPD.indexOf(id) === -1) {
+          const playerManager = fivenations.game.playerManager;
+          const player = playerManager
+            .getPlayers()
+            .find(player => player.getTeam() === selector.getSelectedPlayer());
+          if (player) {
+            BPD.activate(id, player);
+            BPD.canBeBuiltAnywhere = true;
+            ns.BPDActivated = true;
+          }
+        }
+
+        // updates the current selection
+        selector.select({
+          category: CATEGORY_ENTITIES,
+          id,
+        });
       });
-    });
-  });
+    }));
 }
 
 function mergeAllEntities() {
