@@ -44,10 +44,11 @@ function installFiveNations() {
           authorised: user,
           user,
         });
+
+        game.map.getFogOfWar().blackSheepWall(i + 1);
       }
 
       // FogOfWar must be shut down
-      game.map.getFogOfWarRenderer().hide();
 
       addSelectorDisplayToGameStage();
 
