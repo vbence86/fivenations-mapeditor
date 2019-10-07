@@ -32,7 +32,8 @@ const excludedFromBPD = [
  * @return {number} the frame of the entity that should be displayed
  */
 function getDisplayFrame(data) {
-  if (data.customFrame) return data.customFrame;
+  if (data.defaultFrame !== undefined) return data.defaultFrame;
+  if (data.customFrame !== undefined) return data.customFrame;
   if (data.animations && data.animations['idle-forever']) {
     if (data.animations['idle-forever'].frames.length === 1) {
       return data.animations['idle-forever'].frames[0];

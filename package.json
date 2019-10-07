@@ -57,9 +57,9 @@
     "format": "prettier-eslint --write src/js/**/*.js",
     "precommit": "lint-staged",
     "postinstall": "node ./scripts/postinstall",
+    "update": "node ./scripts/update",
     "start-server": "forever start server-runner.js",
     "stop-server": "forever stop server-runner.js",
-    "update": "git checkout master && git pull",
     "test": "mocha --delay --require babel-core/register test/**/*.spec.js"
   },
   "lint-staged": {
