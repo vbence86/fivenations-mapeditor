@@ -13,7 +13,7 @@ const ns = window.fivenations;
 const excludedCategories = [CATEGORY_PLAYER_START_LOCATION];
 
 // frame to be shown when the entities are displayed
-const DEFAULT_FRAME = 4;
+const DEFAULT_FRAME = 3;
 const CUSTOM_FRAMES = {
   commandcenter: 37,
 };

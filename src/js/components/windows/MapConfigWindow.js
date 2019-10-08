@@ -1,5 +1,5 @@
 /* global window, alert */
-import { THEME } from '../../helpers/consts';
+import { THEME, PLAYERS_COUNT } from '../../helpers/consts';
 import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
 import EventEmitter from '../../helpers/EventEmitter';
@@ -389,10 +389,16 @@ function create(game, EZGUI, phaserGame) {
     exporter.setMap(config);
 
     game.map.new(config);
+
+    // reveal fog of war for all players
+    for (let i = 0, l = PLAYERS_COUNT; i < l; i += 1) {
+      game.map.getFogOfWar().blackSheepWall(i + 1);
+    }
+
     // Removes Fog of War from the game stage
     game.map.getFogOfWarRenderer().hide();
-    // Removes Fog of War from the Minimap
-    Utils.revealMap(game.map);
+
+    game.map.getFogOfWar().setActiveVisibleTeam(1);
 
     Selector.getInstance().reset();
   });

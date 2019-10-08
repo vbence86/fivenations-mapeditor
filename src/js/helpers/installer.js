@@ -45,10 +45,9 @@ function installFiveNations() {
           user,
         });
 
+        // reveal fog of war for all players
         game.map.getFogOfWar().blackSheepWall(i + 1);
       }
-
-      // FogOfWar must be shut down
 
       addSelectorDisplayToGameStage();
 
