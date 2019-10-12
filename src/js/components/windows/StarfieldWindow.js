@@ -115,9 +115,11 @@ const spaceObjectsAttributes = {
     },
     {
       id: 'spaceObjectsAttributeZ',
-      component: 'Slider',
-
-      slide: { width: 30, height: 40 },
+      component: 'Input',
+      font: {
+        size: '18px',
+        family: 'Arial',
+      },
       position: 'top left',
       width: 175,
       height: 30,
@@ -136,9 +138,11 @@ const spaceObjectsAttributes = {
     },
     {
       id: 'spaceObjectsAttributeScale',
-      component: 'Slider',
-
-      slide: { width: 30, height: 40 },
+      component: 'Input',
+      font: {
+        size: '18px',
+        family: 'Arial',
+      },
       position: 'top left',
       width: 175,
       height: 30,
@@ -247,8 +251,18 @@ function addPlacementListener(game, EZGUI, phaserGame) {
   game.userPointer.on('leftbutton/down', (mousePointer) => {
     const coords = mousePointer.getScreenCoords();
     const selector = Selector.getInstance();
-    const z = EZGUI.components.spaceObjectsAttributeZ.value * 0.9 + 0.1;
-    const scale = EZGUI.components.spaceObjectsAttributeScale.value + 1;
+    const attrZ = Math.max(
+      0,
+      Math.min(1, parseFloat(EZGUI.components.spaceObjectsAttributeZ.text, 10)),
+    );
+    const scale = Math.max(
+      0,
+      Math.min(
+        10,
+        parseFloat(EZGUI.components.spaceObjectsAttributeScale.text, 10),
+      ),
+    );
+    const z = attrZ * 0.9 + 0.1;
 
     if (ns.noInputOverlay) return;
 

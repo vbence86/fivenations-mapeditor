@@ -26,7 +26,7 @@ npm run dev
 ```
 The mapeditor will be automatically opened in a new tab in your default browser. If not, try to manually open a browser and navigate to ```http://localhost:9000```
 
-## Adding entity to Entities Tab
+## Add entity to Entities Tab
 Open `src/js/helpers/consts.js` and augment the list above with the id of the desired entity.
 ```js
 export const ENTITIES = {
@@ -40,7 +40,7 @@ export const ENTITIES = {
     ...
 ```
 
-## Adding effect to Effects Tab
+## Add effect to Effects Tab
 Open `src/js/components/elements/EffectsTab.js` and augment the list above with the id of the desired entity.
 ```js
 const effects = {
@@ -54,7 +54,7 @@ const effects = {
     ...
 ```
 
-## Adding space object to Space Objects Tab
+## Add space object to Space Objects Tab
 Open `src/js/components/elements/SpaceObjectsList.js` and augment the list above with the id of the desired entity.
 ```js
 const spaceObjects = [
@@ -69,4 +69,17 @@ const spaceObjects = [
   'bg_asteroidfields_normal9',
   'bg_asteroidfields_normal10',
   ...
+```
+
+## Flag Space Object to allow overlapping
+`src/js/components/windows/EntitiesWindow.js:54`
+```js
+const canBePlacedOnTopOfObstacles = [
+  'asteroidswarm1',
+  'asteroidswarm2',
+  'asteroidswarm3',
+  'asteroidswarm4',
+  'asteroidswarm5',
+  ...
+
 ```
