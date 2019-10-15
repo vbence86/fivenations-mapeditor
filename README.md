@@ -83,3 +83,25 @@ const canBePlacedOnTopOfObstacles = [
   ...
 
 ```
+
+## Bring Mapeditor up-to-date with Five Nations
+- Checkout #fivenations project from https://github.com/vbence86/fivenations.
+- Make sure you've got the latest version of the desired branch pulled down
+- Switch to `mapeditor` branch
+- Merge the desired branch into `mapeditor` branch
+```bash
+git merge milestone/luckylabor
+```
+- Push the merged variance to the remote repository
+```bash
+git push
+```
+- Go to your mapeditor project folder and update the project
+```bash
+git pull
+npm i
+```
+- Restart the dev server
+```bash
+npm run dev
+```
