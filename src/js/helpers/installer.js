@@ -1,4 +1,4 @@
-/* global FiveNations, window */
+/* global Phaser, FiveNations, window */
 import { PLAYERS_COUNT } from './consts';
 import SelectorDisplay from './SelectorDisplay';
 
@@ -26,6 +26,13 @@ function addSelectorDisplayToGameStage() {
   SelectorDisplay.addToWorld();
 }
 
+/**
+ * Removes the keyboard listeners that are not needed in mapeditor mode
+ */
+function removeKeyboardListeners(game) {
+  game.input.keyboard.removeKey(Phaser.Keyboard.BACKSPACE);
+}
+
 function installFiveNations() {
   return new Promise((resolve) => {
     scriptBox.add('default', (game) => {
@@ -45,12 +52,12 @@ function installFiveNations() {
           user,
         });
 
+        // reveal fog of war for all players
         game.map.getFogOfWar().blackSheepWall(i + 1);
       }
 
-      // FogOfWar must be shut down
-
       addSelectorDisplayToGameStage();
+      removeKeyboardListeners(game);
 
       resolve(game);
     });

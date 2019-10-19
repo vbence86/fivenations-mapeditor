@@ -12,29 +12,38 @@ const ns = window.fivenations;
 
 const excludedCategories = [CATEGORY_PLAYER_START_LOCATION];
 
+// frame to be shown when the entities are displayed
+const DEFAULT_FRAME = 3;
+const CUSTOM_FRAMES = {
+  commandcenter: 37,
+};
+
 /**
  * Returns the id of the frame that should be displayed when the
  * BuildingPlacementDisplay is activated
- * @param {string} id - id of the entity
+ *
+ * @param {object} data - DataObject of the entity against which
  * the BuildingPlacementDisplay has been activated
- * @return {number} the frame of the entity that should be displayed
+ * @param {string} id
+ * @returns {number} the frame of the entity that should be displayed
  */
 function getDisplayFrame(id) {
   const data = ns.game.cache.getJSON(id);
   const animationOffset = data.animationOffset || 0;
-  if (data.frames && data.frames.length) return data.frames[0];
   if (data.customFrame !== undefined) return data.customFrame;
+  if (data.defaultFrame !== undefined) return data.defaultFrame;
+  if (CUSTOM_FRAMES[id]) return CUSTOM_FRAMES[id];
   if (data.animations && data.animations['idle-forever']) {
     if (data.animations['idle-forever'].frames.length === 1) {
       return data.animations['idle-forever'].frames[0] + animationOffset;
     }
   }
   if (data.animations && data.animations.idle) {
-    if (data.animations.idle.frames.length) {
+    if (data.animations.idle.frames && data.animations.idle.frames.length) {
       return data.animations.idle.frames[0] + animationOffset;
     }
   }
-  return 3;
+  return DEFAULT_FRAME;
 }
 
 /**
