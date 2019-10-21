@@ -1,5 +1,5 @@
 /* global window, alert */
-import { THEME } from '../../helpers/consts';
+import { THEME, PLAYERS_COUNT } from '../../helpers/consts';
 import Utils from '../../helpers/Utils';
 import Exporter from '../../helpers/Exporter';
 import Importer from '../../helpers/Importer';
@@ -143,13 +143,22 @@ function addImportButtonListener(game, EZGUI) {
       const players = importer.getPlayers();
       emitter.emit('onPlayersImported', players);
 
-      Utils.revealMap(game.map);
+      // reveal fog of war for all players
+      for (let i = 0, l = PLAYERS_COUNT; i < l; i += 1) {
+        game.map.getFogOfWar().blackSheepWall(i + 1);
+      }
+
+      // Removes Fog of War from the game stage
       game.map.getFogOfWarRenderer().hide();
+
+      game.map.getFogOfWar().setActiveVisibleTeam(1);
+
       game.map.forceRefresh();
+
+      game.botManager.reset();
 
       importer.updateExporter(Exporter.getInstance());
     });
-    Selector.getInstance().reset();
   });
 }
 
