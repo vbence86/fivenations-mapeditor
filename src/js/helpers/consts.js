@@ -462,6 +462,7 @@ export const ENTITIES = {
     'wrecktitanium5',
     'wrecktitanium6',
     'wrecktitanium7',
+    'blocker',
     'plasmoid',
   ],
 };
