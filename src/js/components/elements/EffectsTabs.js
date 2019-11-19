@@ -291,7 +291,7 @@ function addButtonListeners(game, EZGUI, phaserGame) {
       const button = EZGUI.components[id];
       if (!button) return;
 
-      const atlasKey = (ns.entities[id] && ns.entities[id].atlasKey) || id;
+      const atlasKey = (ns.effects[id] && ns.effects[id].atlasKey) || id;
       const spriteObj = phaserGame.make.sprite(0, 0, atlasKey);
       const DO = phaserGame.cache.getJSON(id);
       spriteObj.frame = getDisplayFrame(DO);
