@@ -96,7 +96,8 @@ class SelectorDisplay extends Phaser.Group {
    */
   createSpriteById(id) {
     const DO = ns.game.cache.getJSON(id);
-    const spriteId = DO.sprite || id;
+    const atlasKey = (ns.entities[id] && ns.entities[id].atlasKey) || id;
+    const spriteId = DO.sprite || atlasKey;
     this.sprite = this.game.add.sprite(0, 0, spriteId);
     this.sprite.frame = getDisplayFrame(id);
     this.sprite.anchor.set(0.5);
