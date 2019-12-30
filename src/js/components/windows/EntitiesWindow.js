@@ -446,7 +446,7 @@ function placeEntity(game, config) {
   };
   game.eventEmitter.synced.entities
     .add(extendedConfig)
-    .then(guid => game.entityManager.entities(guid))
+    .then(guid => game.entityManager.getEntityByGUID(guid))
     .then((entity) => {
       // if an entity is selected we cancel the starfield selection
       entity.on('select', () => {
@@ -504,14 +504,14 @@ function addPlacementListener(game, EZGUI, phaserGame) {
       id: selector.getId(),
       x: coords.x,
       y: coords.y,
-      team: selector.getSelectedPlayer(),
+      playerId: selector.getSelectedPlayer(),
     });
   });
 }
 
 function addRemoveListener(game) {
   game.userKeyboard.on('key/delete', () => {
-    game.entityManager.entities(':selected').forEach((entity) => {
+    game.entityManager.getSelectedEntities().forEach((entity) => {
       Exporter.getInstance().removeEntityByGUID(entity.getGUID());
     });
   });
@@ -531,7 +531,7 @@ function addSetHeaderListener(game) {
     const coords = mousePointer.getRealCoords();
 
     const entityManager = game.entityManager;
-    const entities = entityManager.entities(':selected');
+    const entities = entityManager.getSelectedEntities();
 
     if (entities.length) {
       entities.forEach((entity) => {

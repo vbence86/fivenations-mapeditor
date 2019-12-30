@@ -138,7 +138,7 @@ function addButtonListeners(game, EZGUI, phaserGame) {
           const playerManager = fivenations.game.playerManager;
           const player = playerManager
             .getPlayers()
-            .find(player => player.getTeam() === selector.getSelectedPlayer());
+            .find(player => player.getId() === selector.getSelectedPlayer());
           if (player) {
             BPD.activate(id, player);
             BPD.canBeBuiltAnywhere = true;

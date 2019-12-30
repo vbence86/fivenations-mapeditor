@@ -63,7 +63,7 @@ const natureLayout = {
   position: 'top left',
   width,
   height: 40,
-  layout: [10, 1],
+  layout: [6, 1],
   children: [
     {
       id: 'playerNatureLabel1',
@@ -77,8 +77,6 @@ const natureLayout = {
       width: 80,
       height: 30,
     },
-    null,
-    null,
     {
       id: 'playerNautralCheckbox',
       component: 'Checkbox',
@@ -86,8 +84,6 @@ const natureLayout = {
       width: 30,
       height: 30,
     },
-    null,
-    null,
     {
       id: 'playerNatureLabel2',
       text: 'Capturable',
@@ -100,10 +96,27 @@ const natureLayout = {
       width: 80,
       height: 30,
     },
-    null,
-    null,
     {
       id: 'playerCaptureCheckbox',
+      component: 'Checkbox',
+      position: 'top left',
+      width: 30,
+      height: 30,
+    },
+    {
+      id: 'playerNatureLabel3',
+      text: 'NPC',
+      font: {
+        size: '18px',
+        family: 'Arial',
+      },
+      component: 'Label',
+      position: 'top left',
+      width: 40,
+      height: 30,
+    },
+    {
+      id: 'playerNPCCheckbox',
       component: 'Checkbox',
       position: 'top left',
       width: 30,
@@ -346,6 +359,7 @@ function updateWindowComponents(idx) {
   const {
     playerNautralCheckbox,
     playerCaptureCheckbox,
+    playerNPCCheckbox,
     playerResourcesTitanium,
     playerResourcesSilicium,
     playerResourcesUranium,
@@ -357,6 +371,7 @@ function updateWindowComponents(idx) {
 
   playerNautralCheckbox.checked = !!player.independent;
   playerCaptureCheckbox.checked = !!player.capturable;
+  playerNPCCheckbox.checked = !!player.npc;
 
   playerResourcesTitanium.text = player.titanium || 0;
   playerResourcesSilicium.text = player.silicium || 0;
@@ -385,7 +400,8 @@ function addResourceIcon(config) {
 function addTechnologyIcon(config) {
   const { game } = ns.game;
   const { parent, id } = config;
-  const icon = game.add.sprite(0, 0, id);
+  const atlasKey = (ns.entities[id] && ns.entities[id].atlasKey) || id;
+  const icon = game.add.sprite(0, 0, atlasKey);
   const scaleFactor = 30 / 51;
   icon.anchor.set(0.5);
   icon.frame = 2;
@@ -461,24 +477,21 @@ function create(game, EZGUI, phaserGame) {
   // -----------------------------------------------------------
   const neutralButton = EZGUI.components.playerNautralCheckbox;
   const captureButton = EZGUI.components.playerCaptureCheckbox;
+  const npcButton = EZGUI.components.playerNPCCheckbox;
 
-  neutralButton.on('click', () => {
+  const natureButtonCallback = () => {
     const selectedPlayerIdx = selector.getCurrentPlayerSettingsIdx();
     Exporter.getInstance().setPlayer({
       idx: selectedPlayerIdx,
       independent: !!neutralButton.checked,
       capturable: !!captureButton.checked,
+      npc: !!npcButton.checked,
     });
-  });
+  };
 
-  captureButton.on('click', () => {
-    const selectedPlayerIdx = selector.getCurrentPlayerSettingsIdx();
-    Exporter.getInstance().setPlayer({
-      idx: selectedPlayerIdx,
-      independent: !!neutralButton.checked,
-      capturable: !!captureButton.checked,
-    });
-  });
+  neutralButton.on('click', natureButtonCallback);
+  captureButton.on('click', natureButtonCallback);
+  npcButton.on('click', natureButtonCallback);
 
   // -----------------------------------------------------------
   // Player Resources
@@ -525,9 +538,7 @@ function create(game, EZGUI, phaserGame) {
   const techList = getTechnologies();
   techList.forEach((id) => {
     const checkbox = EZGUI.components[`technologyCheckbox_${id}`];
-    checkbox.x -= 38;
-    addTechnologyIcon({ parent: checkbox, id });
-
+    checkbox.x -= 60;
     checkbox.on('click', () => {
       const playerIdx = selector.getCurrentPlayerSettingsIdx();
 

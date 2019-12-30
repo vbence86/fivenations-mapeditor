@@ -151,7 +151,7 @@ function addImportButtonListener(game, EZGUI) {
       // Removes Fog of War from the game stage
       game.map.getFogOfWarRenderer().hide();
 
-      game.map.getFogOfWar().setActiveVisibleTeam(1);
+      game.map.getFogOfWar().setActiveVisiblePlayerId(1);
 
       game.map.forceRefresh();
 

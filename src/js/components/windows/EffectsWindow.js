@@ -283,7 +283,7 @@ function addSelectEffectListener(game, phaserGame) {
   game.userPointer.on('leftbutton/down', (mousePointer) => {
     const selector = Selector.getInstance();
     if (selector.isActive()) return;
-    if (entityManager.entities(':selected').length > 0) return;
+    if (entityManager.getSelectedEntities().length > 0) return;
 
     // selection functionality must be disabled if there is an
     // overlay window above the game stage

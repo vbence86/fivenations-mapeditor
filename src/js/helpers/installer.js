@@ -47,7 +47,7 @@ function installFiveNations() {
       for (let i = 0, l = PLAYERS_COUNT; i < l; i += 1) {
         const user = i === 0;
         game.eventEmitter.synced.players.add({
-          team: i + 1,
+          id: i + 1,
           authorised: user,
           user,
         });
@@ -58,6 +58,9 @@ function installFiveNations() {
 
       addSelectorDisplayToGameStage();
       removeKeyboardListeners(game);
+
+      // make control panel disappear
+      game.GUI.getControlPanel().visible = false;
 
       resolve(game);
     });

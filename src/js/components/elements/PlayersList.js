@@ -155,7 +155,7 @@ function addButtonListeners(game, EZGUI, phaserGame) {
       // selects the given player as user
       playerManager.user = undefined; // clears the cache
       playerManager.getPlayers().forEach((player) => {
-        player.user = player.getTeam() === i;
+        player.user = player.getId() === i;
       });
     });
 
@@ -166,8 +166,7 @@ function addButtonListeners(game, EZGUI, phaserGame) {
         toggleButton(settingsButton);
 
         Exporter.getInstance().setPlayer({
-          idx: i,
-          team: i,
+          id: i,
           active: !!activeButton.checked,
         });
       });

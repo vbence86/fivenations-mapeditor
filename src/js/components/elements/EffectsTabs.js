@@ -286,37 +286,35 @@ function addButtonListeners(game, EZGUI, phaserGame) {
     selection.visible = false;
   });
 
-  mergeAllEntities().forEach(id =>
-    setTimeout(() => {
-      const button = EZGUI.components[id];
-      if (!button) return;
+  mergeEffects().forEach((id) => {
+    const button = EZGUI.components[id];
+    if (!button) return;
 
-      const atlasKey = (ns.effects[id] && ns.effects[id].atlasKey) || id;
-      const spriteObj = phaserGame.make.sprite(0, 0, atlasKey);
-      const DO = phaserGame.cache.getJSON(id);
-      spriteObj.frame = getDisplayFrame(DO);
+    const atlasKey = (ns.effects[id] && ns.effects[id].atlasKey) || id;
+    const spriteObj = phaserGame.make.sprite(0, 0, atlasKey);
+    const DO = phaserGame.cache.getJSON(id);
+    spriteObj.frame = getDisplayFrame(DO);
 
-      const clone = phaserGame.make.sprite(0, 0, spriteObj.generateTexture());
-      const scale = button.width / clone.width;
+    const scale = button.width / spriteObj.width;
 
-      clone.scale.setTo(scale, scale);
-      clone.inputEnabled = true;
+    spriteObj.scale.setTo(scale, scale);
+    spriteObj.inputEnabled = true;
 
-      button.addChild(clone);
-      button.on('click', () => {
-        // attaches selector sprite to the button
-        selection.visible = true;
-        button.addChild(selection);
-        // updates the current selection
-        Selector.getInstance().select({
-          category: CATEGORY_EFFECTS,
-          id,
-        });
+    button.addChild(spriteObj);
+    button.on('click', () => {
+      // attaches selector sprite to the button
+      selection.visible = true;
+      button.addChild(selection);
+      // updates the current selection
+      Selector.getInstance().select({
+        category: CATEGORY_EFFECTS,
+        id,
       });
-    }));
+    });
+  });
 }
 
-function mergeAllEntities() {
+function mergeEffects() {
   return Object.keys(effects)
     .map(key => effects[key])
     .reduce((accumulator, list) => accumulator.concat(list), []);

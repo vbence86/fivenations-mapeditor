@@ -119,7 +119,7 @@ class Importer {
     this.getEntities().forEach((config) => {
       game.eventEmitter.synced.entities
         .add(config)
-        .then(guid => game.entityManager.entities(guid))
+        .then(guid => game.entityManager.getEntityByGUID(guid))
         .then((entity) => {
           // if an entity is selected we cancel the starfield selection
           entity.on('select', () => {
