@@ -53,14 +53,17 @@ function installFiveNations() {
         });
 
         // reveal fog of war for all players
-        game.map.getFogOfWar().blackSheepWall(i + 1);
       }
 
+      game.map.getFogOfWar().blackSheepWall();
       addSelectorDisplayToGameStage();
       removeKeyboardListeners(game);
 
       // make control panel disappear
       game.GUI.getControlPanel().visible = false;
+
+      // fog of war layer should not be rendered
+      game.graphics.getGroup('fogofwar').visible = false;
 
       resolve(game);
     });

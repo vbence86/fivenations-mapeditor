@@ -53,8 +53,17 @@ class Importer {
 
   /**
    * Returns all the entities
+   *
+   * @returns {Array} Array that contians all the entity descriptors
    */
   getEntities() {
+    // makes entities namespace compatible with v1 setup
+    if (!this.version || this.version < 2) {
+      this.entities = this.entities.map(entity => ({
+        playerId: parseInt(entity.team, 10),
+        ...entity,
+      }));
+    }
     return this.entities || [];
   }
 
@@ -67,9 +76,18 @@ class Importer {
 
   /**
    * Returns all the players
+   *
+   * @returns {Array} Array that contians all the player descriptors
    */
   getPlayers() {
-    return this.players || {};
+    // makes players namespace compatible with v1 setup
+    if (!this.version || this.version < 2) {
+      this.players = Object.keys(this.players).map(id => ({
+        id: parseInt(id, 10),
+        ...this.players[id],
+      }));
+    }
+    return this.players || [];
   }
 
   /**
@@ -88,6 +106,7 @@ class Importer {
     this.effects = undefined;
     this.spaceObjects = undefined;
     this.locations = undefined;
+    this.version = undefined;
   }
 
   /**

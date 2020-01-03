@@ -143,12 +143,8 @@ function addImportButtonListener(game, EZGUI) {
       const players = importer.getPlayers();
       emitter.emit('onPlayersImported', players);
 
-      // reveal fog of war for all players
-      for (let i = 0, l = PLAYERS_COUNT; i < l; i += 1) {
-        game.map.getFogOfWar().blackSheepWall(i + 1);
-      }
-
       // Removes Fog of War from the game stage
+      game.map.getFogOfWar().blackSheepWall();
       game.map.getFogOfWarRenderer().hide();
 
       game.map.getFogOfWar().setActiveVisiblePlayerId(1);

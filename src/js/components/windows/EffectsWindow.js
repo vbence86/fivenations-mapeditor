@@ -261,6 +261,7 @@ function addPlacementListener(game, EZGUI, phaserGame) {
 }
 
 function isMouseOverEffect(pointer, effect) {
+  if (!effect) return;
   const DO = effect.getDataObject();
   const width = DO.getWidth();
   const height = DO.getHeight();

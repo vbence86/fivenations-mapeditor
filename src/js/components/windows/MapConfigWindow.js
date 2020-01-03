@@ -390,15 +390,15 @@ function create(game, EZGUI, phaserGame) {
 
     game.map.new(config);
 
-    // reveal fog of war for all players
-    for (let i = 0, l = PLAYERS_COUNT; i < l; i += 1) {
-      game.map.getFogOfWar().blackSheepWall(i + 1);
-    }
-
     // Removes Fog of War from the game stage
+    game.map.getFogOfWar().blackSheepWall();
     game.map.getFogOfWarRenderer().hide();
 
-    game.map.getFogOfWar().setActiveVisibleTeam(1);
+    game.map.getFogOfWar().setActiveVisiblePlayerId(1);
+
+    game.map.forceRefresh();
+
+    game.botManager.reset();
 
     Selector.getInstance().reset();
   });
