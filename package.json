@@ -5,7 +5,7 @@
   "repository": "",
   "version": "1.6.0",
   "dependencies": {
-    "ansi-regex": "^3.0.0",
+    "ansi-regex": "^6.0.1",
     "event-emitter": "^0.3.5",
     "express": "^4.14.0",
     "forever": "^0.15.2"
